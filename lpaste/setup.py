@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name="lpaste",
-	version="0.0.2",
+	version="0.0.3",
 	packages=['lpaste'],
 	entry_points = {
 		'console_scripts': [

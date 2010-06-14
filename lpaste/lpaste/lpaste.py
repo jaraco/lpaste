@@ -5,7 +5,7 @@ from urllib import urlencode
 from optparse import OptionParser
 import ConfigParser
 from getpass import getuser
-from poster.encode import multipart_encode
+from poster.encode import multipart_encode, MultipartParam
 from poster.streaminghttp import register_openers
 import urllib2
 import webbrowser
@@ -59,7 +59,8 @@ def main():
 	if not options.longurl:
 		data['makeshort'] = 'True'
 	if options.attach:
-		data['file'] = fh
+		data = data.items()
+		data.append(MultipartParam.from_file('file', filename))
 		datagen, headers = multipart_encode(data)
 		headers.update(BASE_HEADERS)
 	else:
