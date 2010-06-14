@@ -1,11 +1,11 @@
 from setuptools import setup
 
-setup(name="qpaste",
+setup(name="lpaste",
 	version="0.0.1",
-	packages=['qpaste'],
+	packages=['lpaste'],
 	entry_points = {
 		'console_scripts': [
-			'qpaste = qpaste.qpaste:main',
+			'lpaste = lpaste.lpaste:main',
 		],
 	},
 	install_requires = [

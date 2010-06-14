@@ -1,3 +1,7 @@
 Basic tools to make librarypaste easier to use.
 
- * qpaste: python tool that can paste code or attachments.
+ * lpaste: python tool that can paste code or attachments.
+           You can add your own default username or library paste site (either option is optional) by creating a ~/.lpasterc or /etc/lpasterc file that looks like this:
+           [lpaste]
+           url: http://alternate.librarypaste.company.local
+           user: GrandPoobah
