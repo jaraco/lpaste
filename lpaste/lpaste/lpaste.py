@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import absolute_import
 
 import os, sys
 from urllib import urlencode
@@ -10,11 +11,22 @@ from poster.streaminghttp import register_openers
 import urllib2
 import webbrowser
 
+try:
+	clipb = __import__('lpaste.%s.clipboard' % sys.platform)
+except ImportError:
+	raise RuntimeError("No clipboard support")
+	clipb = None
+
 register_openers()
 BASE_HEADERS = {'User-Agent' : 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2b1) lpaste'}
 
 def get_options():
-	'%prog [options] [file]'
+	"""
+	%prog [options]
+	
+	By default, %prog will take the content from the clipboard. Use the
+	`file` parameter to pass in a file or use stdin.
+	"""
 	fileconf = ConfigParser.ConfigParser()
 	fileconf.read('/etc/lpasterc')
 	fileconf.read(os.path.expanduser('~/.lpasterc'))
@@ -52,14 +64,17 @@ def get_options():
 		action="store_true", default=False,
 		help="Open your paste in a new browser window after it's "
 		"uploaded")
+	parser.add_option('-f', '--file',
+		help="Paste the content from the file (use '-' for stdin); "
+		"otherwise, content will be taken from the clipboard")
 
 	options, args = parser.parse_args()
-	if args and args[0] != '-':
-		filename = args[0]
-		fh = open(filename, 'rb')
-	else:
-		print 'Using stdin...'
+	if options.file == '-':
 		fh = sys.stdin
+	elif options.file:
+		fh = open(options.file, 'rb')
+	else:
+		fh = get_clipboard_stream()
 
 	options.fh = fh
 	return options
