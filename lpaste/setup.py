@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name="lpaste",
-	version="0.0.3",
+	version="0.1",
 	packages=['lpaste'],
 	entry_points = {
 		'console_scripts': [
@@ -11,7 +11,7 @@ setup(name="lpaste",
 	install_requires = [
 		'poster', 
 	],
-    description="IRC bot - full featured, yet extensible and customizable",
+    description="Library Paste command-line client",
     license = 'MIT',
     author="Chris Mulligan",
     author_email="chmullig@gmail.com",
