@@ -1,7 +1,8 @@
 from setuptools import setup
 
-setup(name="lpaste",
-	version="0.1",
+setup(
+	name="lpaste",
+	use_hg_version=True,
 	packages=['lpaste'],
 	entry_points = {
 		'console_scripts': [
@@ -25,6 +26,9 @@ setup(name="lpaste",
 		'Programming Language :: Python :: 2.5',
 		'Programming Language :: Python :: 2.6',
 		'Programming Language :: Python :: 2.7',
+	],
+	setup_requires = [
+		'hgtools',
 	],
 )
 
