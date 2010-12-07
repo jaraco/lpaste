@@ -12,7 +12,8 @@ import urllib2
 import webbrowser
 
 try:
-	clipb = __import__('lpaste.%s.clipboard' % sys.platform)
+	lpaste = __import__('lpaste.%s.clipboard' % sys.platform)
+	clipb = getattr(lpaste, sys.platform).clipboard
 except ImportError:
 	raise RuntimeError("No clipboard support")
 	clipb = None
@@ -69,14 +70,18 @@ def get_options():
 		"otherwise, content will be taken from the clipboard")
 
 	options, args = parser.parse_args()
-	if options.file == '-':
-		fh = sys.stdin
-	elif options.file:
-		fh = open(options.file, 'rb')
+	if getattr(options, 'file', None):
+		stream = open(options.file, 'rb') if options.file != '-' else sys.stdin
+		if options.attach:
+			source = Source.from_stream(stream)
+		else:
+			source = Source(code=stream.read())
 	else:
-		fh = get_clipboard_stream()
+		source = clipb.get_source()
 
-	options.fh = fh
+	options.source = source
+	if hasattr(source, 'format'):
+		options.format = source.format
 	return options
 
 
@@ -88,22 +93,14 @@ def main():
 	data = {'nick': options.username, 'fmt': options.format, }
 	if not options.longurl:
 		data['makeshort'] = 'True'
-	if options.attach:
-		data = data.items()
-		data.append(MultipartParam.from_file('file', filename))
-		datagen, headers = multipart_encode(data)
-		headers.update(BASE_HEADERS)
-	else:
-		fh = options.fh
-		code = fh.read()
-		fh.close()
-		data['code'] = code
-		datagen = urlencode(data)
-		headers = BASE_HEADERS
+	options.source.apply(data)
+	datagen, headers = multipart_encode(data)
+	headers.update(BASE_HEADERS)
 
 	req = urllib2.Request(paste_url, datagen, headers)
 	res = urllib2.urlopen(req)
 	url = res.geturl()
+	clipb.set_text(url)
 	print 'Paste URL: %s' % url
 	if options.browser:
 		print "Now opening browser..."
