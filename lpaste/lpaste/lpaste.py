@@ -15,8 +15,8 @@ try:
 	lpaste = __import__('lpaste.%s.clipboard' % sys.platform)
 	clipb = getattr(lpaste, sys.platform).clipboard
 except ImportError:
-	raise RuntimeError("No clipboard support")
 	clipb = None
+from lpaste.source import Source
 
 register_openers()
 BASE_HEADERS = {'User-Agent' : 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2b1) lpaste'}
@@ -77,6 +77,9 @@ def get_options():
 		else:
 			source = Source(code=stream.read())
 	else:
+		if not clipb:
+			print "Clipboard support not available - you must supply -f"
+		raise SystemExit(1)
 		source = clipb.get_source()
 
 	options.source = source
@@ -100,7 +103,7 @@ def main():
 	req = urllib2.Request(paste_url, datagen, headers)
 	res = urllib2.urlopen(req)
 	url = res.geturl()
-	clipb.set_text(url)
+	if clipb: clipb.set_text(url)
 	print 'Paste URL: %s' % url
 	if options.browser:
 		print "Now opening browser..."
