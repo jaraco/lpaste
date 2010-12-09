@@ -23,10 +23,10 @@ BASE_HEADERS = {'User-Agent' : 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; 
 
 def get_options():
 	"""
-	%prog [options]
+	%prog [options] [<file>]
 	
-	By default, %prog will take the content from the clipboard. Use the
-	`file` parameter to pass in a file or use stdin.
+	If file is not suplied, %prog will take the content from the
+	clipboard. Use '-' for the file to read from stdin.
 	"""
 	fileconf = ConfigParser.ConfigParser()
 	fileconf.read('/etc/lpasterc')
@@ -65,11 +65,12 @@ def get_options():
 		action="store_true", default=False,
 		help="Open your paste in a new browser window after it's "
 		"uploaded")
-	parser.add_option('-f', '--file',
-		help="Paste the content from the file (use '-' for stdin); "
-		"otherwise, content will be taken from the clipboard")
 
 	options, args = parser.parse_args()
+	if args:
+		options.file = args.pop()
+	if args:
+		parser.error("At most one positional arg (file) is allowed.")
 	if getattr(options, 'file', None):
 		stream = open(options.file, 'rb') if options.file != '-' else sys.stdin
 		if options.attach:
@@ -78,7 +79,7 @@ def get_options():
 			source = Source(code=stream.read())
 	else:
 		if not clipb:
-			print "Clipboard support not available - you must supply -f"
+			print "Clipboard support not available - you must supply a file"
 			raise SystemExit(1)
 		source = clipb.get_source()
 
