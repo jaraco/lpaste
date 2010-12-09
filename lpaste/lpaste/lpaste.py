@@ -10,6 +10,7 @@ from poster.encode import multipart_encode, MultipartParam
 from poster.streaminghttp import register_openers
 import urllib2
 import webbrowser
+from textwrap import dedent
 
 try:
 	lpaste = __import__('lpaste.%s.clipboard' % sys.platform)
@@ -43,7 +44,7 @@ def get_options():
 	default_user = (file_user or os.environ.get('QPASTEUSER')
 		or os.environ.get('USERNAME') or getuser())
 
-	parser = OptionParser(usage=get_options.__doc__)
+	parser = OptionParser(usage=dedent(get_options.__doc__).lstrip())
 
 	parser.add_option('-s', '--site', dest='site',
 		default=default_url,
