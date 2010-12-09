@@ -26,8 +26,7 @@ def get_options():
 	"""
 	%prog [options] [<file>]
 	
-	If file is not suplied, %prog will take the content from the
-	clipboard. Use '-' for the file to read from stdin.
+	If file is not suplied, stdin will be used.
 	"""
 	fileconf = ConfigParser.ConfigParser()
 	fileconf.read('/etc/lpasterc')
@@ -66,23 +65,28 @@ def get_options():
 		action="store_true", default=False,
 		help="Open your paste in a new browser window after it's "
 		"uploaded")
+	parser.add_option('-c', '--clipboard',
+		action="store_true", default=False,
+		help="Get the input from the clipboard")
 
 	options, args = parser.parse_args()
-	if args:
-		options.file = args.pop()
+	options.file = args.pop() if args else None
 	if args:
 		parser.error("At most one positional arg (file) is allowed.")
-	if getattr(options, 'file', None):
-		stream = open(options.file, 'rb') if options.file != '-' else sys.stdin
+	if options.file and options.clipboard:
+		parser.error("Either supply a file or --clipboard, but not both")
+	if options.clipboard:
+		if not clipb:
+			parser.error("Clipboard support not available - you must "
+				"supply a file")
+		source = clipb.get_source()
+	else:
+		filename = options.file or '-'
+		stream = open(filename, 'rb') if filename != '-' else sys.stdin
 		if options.attach:
 			source = Source.from_stream(stream)
 		else:
 			source = Source(code=stream.read())
-	else:
-		if not clipb:
-			print "Clipboard support not available - you must supply a file"
-			raise SystemExit(1)
-		source = clipb.get_source()
 
 	options.source = source
 	if hasattr(source, 'format'):
