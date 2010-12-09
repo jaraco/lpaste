@@ -79,7 +79,7 @@ def get_options():
 	else:
 		if not clipb:
 			print "Clipboard support not available - you must supply -f"
-		raise SystemExit(1)
+			raise SystemExit(1)
 		source = clipb.get_source()
 
 	options.source = source
