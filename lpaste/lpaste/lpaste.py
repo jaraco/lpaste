@@ -6,7 +6,7 @@ from urllib import urlencode
 from optparse import OptionParser
 import ConfigParser
 from getpass import getuser
-from poster.encode import multipart_encode, MultipartParam
+from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 import urllib2
 import webbrowser

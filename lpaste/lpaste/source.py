@@ -1,3 +1,4 @@
+from poster.encode import MultipartParam
 
 class Source(object):
 	def __init__(self, **kwargs):
@@ -9,9 +10,14 @@ class Source(object):
 		source = Source(stream=stream)
 		source.content_type = content_type
 		source.filename = filename
+		return source
 
 	def apply(self, data):
 		if hasattr(self, 'code'):
 			data['code'] = self.code
 			return
-		data['file'] = self.stream
+		data['file'] = MultipartParam('file',
+			filetype = self.content_type,
+			fileobj = self.stream,
+			filename = self.filename,
+			)
