@@ -7,9 +7,11 @@ class Source(object):
 	@classmethod
 	def from_stream(cls, stream,
 		content_type='application/octet-stream', filename=None):
-		source = Source(stream=stream)
-		source.content_type = content_type
-		source.filename = filename
+		source = cls(
+			stream = stream,
+			content_type = content_type,
+			filename = filename,
+			)
 		return source
 
 	def apply(self, data):

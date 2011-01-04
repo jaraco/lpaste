@@ -81,10 +81,11 @@ def get_options():
 				"supply a file")
 		source = clipb.get_source()
 	else:
-		filename = options.file or '-'
-		stream = open(filename, 'rb') if filename != '-' else sys.stdin
+		use_stdin = options.file in (None, '-')
+		stream = open(options.file, 'rb') if not use_stdin else sys.stdin
+		filename = os.path.basename(options.file) if not use_stdin else None
 		if options.attach:
-			source = Source.from_stream(stream)
+			source = Source.from_stream(stream, filename=filename)
 		else:
 			source = Source(code=stream.read())
 
