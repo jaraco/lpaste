@@ -23,7 +23,11 @@ class Source(object):
 			return
 		if self.filename and not self.content_type:
 			self.content_type, _ = mimetypes.guess_type(self.filename)
-		params = dict(fileobj = self.stream)
+		if not self.content_type:
+			self.content_type = 'application/octet-stream'
+		params = dict(
+			fileobj = self.stream,
+			filetype = self.content_type,
+			)
 		if self.filename: params.update(filename=self.filename)
-		if self.content_type: params.update(filetype = self.content_type)
 		data['file'] = MultipartParam('file', **params)
