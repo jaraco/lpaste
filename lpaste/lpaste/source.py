@@ -1,12 +1,15 @@
+import mimetypes
 from poster.encode import MultipartParam
+
+# add mimetypes not present in Python
+mimetypes.add_type('image/svg+xml', '.svg')
 
 class Source(object):
 	def __init__(self, **kwargs):
 		self.__dict__.update(kwargs)
 
 	@classmethod
-	def from_stream(cls, stream,
-		content_type='application/octet-stream', filename=None):
+	def from_stream(cls, stream, content_type=None, filename=None):
 		source = cls(
 			stream = stream,
 			content_type = content_type,
@@ -18,8 +21,9 @@ class Source(object):
 		if hasattr(self, 'code'):
 			data['code'] = self.code
 			return
-		data['file'] = MultipartParam('file',
-			filetype = self.content_type,
-			fileobj = self.stream,
-			filename = self.filename,
-			)
+		if self.filename and not self.content_type:
+			self.content_type, _ = mimetypes.guess_type(self.filename)
+		params = dict(fileobj = self.stream)
+		if self.filename: params.update(filename=self.filename)
+		if self.content_type: params.update(filetype = self.content_type)
+		data['file'] = MultipartParam('file', **params)
