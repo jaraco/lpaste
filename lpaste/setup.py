@@ -1,9 +1,9 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 
 setup(
 	name="lpaste",
 	use_hg_version=True,
-	packages=['lpaste'],
+	packages=find_packages(),
 	entry_points = {
 		'console_scripts': [
 			'lpaste = lpaste.lpaste:main',
