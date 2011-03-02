@@ -4,7 +4,6 @@ from cStringIO import StringIO
 import struct
 import functools
 
-from ClientForm import ParseResponse
 import jaraco.windows.clipboard as wclip
 
 from lpaste.source import Source
