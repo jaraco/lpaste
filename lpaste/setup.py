@@ -1,5 +1,10 @@
 from setuptools import find_packages, setup
 
+try:
+	from distutils.command.build_py import build_py_2to3 as build_py
+except ImportError:
+	from distutils.command.build_py import build_py
+
 setup(
 	name="lpaste",
 	use_hg_version=True,
@@ -23,12 +28,12 @@ setup(
 		'Development Status :: 4 - Beta',
 		'License :: OSI Approved :: MIT License',
 		'Operating System :: POSIX',
-		'Programming Language :: Python :: 2.5',
-		'Programming Language :: Python :: 2.6',
-		'Programming Language :: Python :: 2.7',
+		'Programming Language :: Python :: 2',
+		'Programming Language :: Python :: 3',
 	],
 	setup_requires = [
 		'hgtools',
 	],
+	cmdclass=dict(build_py=build_py),
 )
 
