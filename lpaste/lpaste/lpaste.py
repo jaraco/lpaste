@@ -108,7 +108,12 @@ def main():
 	headers.update(BASE_HEADERS)
 
 	req = urllib2.Request(paste_url, datagen, headers)
-	res = urllib2.urlopen(req)
+	try:
+		res = urllib2.urlopen(req)
+	except urllib2.HTTPError as e:
+		if e.getcode() != 500:
+			raise
+		import pdb; pdb.set_trace()
 	url = res.geturl()
 	if clipb: clipb.set_text(url)
 	print 'Paste URL: %s' % url
