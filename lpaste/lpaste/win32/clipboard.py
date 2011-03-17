@@ -42,7 +42,7 @@ def do_html():
 	return Source.from_stream(StringIO(snippet.html), 'text/html',
 		'snippet.html')
 def do_text():
-	code = wclip.get_text()
+	code = wclip.get_unicode_text()
 	src = Source(code=code)
 	try:
 		# see if the code can compile as Python
