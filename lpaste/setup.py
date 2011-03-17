@@ -1,9 +1,17 @@
+import platform
+from collections import defaultdict
+
 from setuptools import find_packages, setup
 
 try:
 	from distutils.command.build_py import build_py_2to3 as build_py
 except ImportError:
 	from distutils.command.build_py import build_py
+
+# add any platform-specific requirements
+clipboard_support = defaultdict(lambda: [], {
+	'Windows': ['jaraco.windows>=2.1dev'],
+	})[platform.system()]
 
 setup(
 	name="lpaste",
@@ -17,6 +25,9 @@ setup(
 	install_requires = [
 		'poster', 
 	],
+	extras_require = dict(
+		clipboard = clipboard_support,
+	),
 	description="Library Paste command-line client",
 	license = 'MIT',
 	author="Chris Mulligan",
