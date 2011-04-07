@@ -4,15 +4,19 @@ import os, sys
 from urllib import urlencode
 from optparse import OptionParser
 import ConfigParser
-from getpass import getuser
+import getpass
 from poster.encode import multipart_encode, MultipartParam
-from poster.streaminghttp import register_openers
+import poster.streaminghttp
 import urllib2
 import webbrowser
+from . import keyring
 
-register_openers()
+
 BASE_HEADERS = {'User-Agent' : 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2b1) lpaste'}
 
+def install_opener(*handlers):
+	opener = poster.streaminghttp.register_openers()
+	map(opener.add_handler, handlers)
 
 def main():
 
@@ -28,7 +32,7 @@ def main():
 	except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
 		file_user = ''
 
-	default_user = file_user or os.environ.get('QPASTEUSER') or os.environ.get('USERNAME') or getuser()
+	default_user = file_user or os.environ.get('QPASTEUSER') or os.environ.get('USERNAME') or getpass.getuser()
 
 	usage = 'usage: %prog [options] [file]'
 	parser = OptionParser(usage=usage)
@@ -45,7 +49,11 @@ def main():
 		help="Upload the file as an attachment instead of as code/text")
 	parser.add_option('-b', '--browser', dest='browser', action="store_true", default=False,
 		help="Open your paste in a new browser window after it's uploaded")
-
+	parser.add_option('--auth-username', default=default_user,
+		help="The username to use when HTTP auth is required",)
+	if not keyring.enabled:
+		parser.add_option('--auth-password',
+			help="The password to use when HTTP auth is required",)
 	options, args = parser.parse_args()
 	if args and args[0] != '-':
 		filename = args[0]
@@ -70,7 +78,15 @@ def main():
 		datagen = urlencode(data)
 		headers = BASE_HEADERS
 
-		
+	if keyring.enabled:
+		auth_manager = keyring.FixedUserKeyringPasswordManager(options.auth_username)
+	else:
+		auth_manager = urllib2.HTTPPasswordMgrWithDefaultRealm()
+		auth_manager.add_password(None, options.site,
+			options.auth_username,
+			options.auth_password or getpass.getpass())
+	auth_handler = urllib2.HTTPBasicAuthHandler(auth_manager)
+	install_opener(auth_handler)
 	req = urllib2.Request(paste_url, datagen, headers)
 	res = urllib2.urlopen(req)
 	url = res.geturl()
