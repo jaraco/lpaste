@@ -5,12 +5,13 @@ import os, sys
 from urllib import urlencode
 from optparse import OptionParser
 import ConfigParser
-from getpass import getuser
+import getpass
 from poster.encode import multipart_encode
-from poster.streaminghttp import register_openers
+import poster.streaminghttp
 import urllib2
 import webbrowser
 from textwrap import dedent
+from . import keyring
 
 try:
 	lpaste = __import__('lpaste.%s.clipboard' % sys.platform)
@@ -19,8 +20,11 @@ except ImportError:
 	clipb = None
 from lpaste.source import Source
 
-register_openers()
 BASE_HEADERS = {'User-Agent' : 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2b1) lpaste'}
+
+def install_opener(*handlers):
+	opener = poster.streaminghttp.register_openers()
+	map(opener.add_handler, handlers)
 
 def get_options():
 	"""
@@ -68,7 +72,11 @@ def get_options():
 	parser.add_option('-c', '--clipboard',
 		action="store_true", default=False,
 		help="Get the input from the clipboard")
-
+	parser.add_option('--auth-username', default=default_user,
+		help="The username to use when HTTP auth is required",)
+	if not keyring.enabled:
+		parser.add_option('--auth-password',
+			help="The password to use when HTTP auth is required",)
 	options, args = parser.parse_args()
 	options.file = args.pop() if args else None
 	if args:
@@ -107,6 +115,15 @@ def main():
 	datagen, headers = multipart_encode(data)
 	headers.update(BASE_HEADERS)
 
+	if keyring.enabled:
+		auth_manager = keyring.FixedUserKeyringPasswordManager(options.auth_username)
+	else:
+		auth_manager = urllib2.HTTPPasswordMgrWithDefaultRealm()
+		auth_manager.add_password(None, options.site,
+			options.auth_username,
+			options.auth_password or getpass.getpass())
+	auth_handler = urllib2.HTTPBasicAuthHandler(auth_manager)
+	install_opener(auth_handler)
 	req = urllib2.Request(paste_url, datagen, headers)
 	try:
 		res = urllib2.urlopen(req)
