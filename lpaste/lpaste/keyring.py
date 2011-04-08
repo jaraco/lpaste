@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+import getpass
+
 try:
 	import keyring
 except ImportError:
