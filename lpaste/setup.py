@@ -23,7 +23,8 @@ setup(
 		],
 	},
 	install_requires = [
-		'poster', 
+		'poster',
+		'keyring>=0.6',
 	],
 	extras_require = dict(
 		clipboard = clipboard_support,
