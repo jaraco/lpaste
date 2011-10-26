@@ -3,6 +3,7 @@ from poster.encode import MultipartParam
 
 # add mimetypes not present in Python
 mimetypes.add_type('image/svg+xml', '.svg')
+mimetypes.add_type('application/json', '.json')
 
 class Source(object):
 	def __init__(self, **kwargs):
