@@ -1,19 +1,14 @@
 from __future__ import absolute_import
 
-import getpass
+import keyring.http
 
-try:
-	import keyring
-except ImportError:
-	pass
 enabled = 'keyring' in globals()
 
-from keyring.http import PasswordMgr
+base = keyring.http.PasswordMgr if enabled else object
 
-class FixedUserKeyringPasswordManager(PasswordMgr):
+class FixedUserKeyringPasswordManager(base):
 	def __init__(self, username):
 		self.username = username
 
 	def get_username(self, realm, authuri):
 		return self.username
-

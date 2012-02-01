@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 from __future__ import absolute_import
 
-import os, sys
-from urllib import urlencode
+import os
+import sys
 from optparse import OptionParser
 import ConfigParser
 import getpass
@@ -20,7 +20,7 @@ except ImportError:
 	clipb = None
 from lpaste.source import Source
 
-BASE_HEADERS = {'User-Agent' : 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2b1) lpaste'}
+BASE_HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2b1) lpaste'}
 
 def install_opener(*handlers):
 	opener = poster.streaminghttp.register_openers()
@@ -29,7 +29,7 @@ def install_opener(*handlers):
 def get_options():
 	"""
 	%prog [options] [<file>]
-	
+
 	If file is not suplied, stdin will be used.
 	"""
 	fileconf = ConfigParser.ConfigParser()
