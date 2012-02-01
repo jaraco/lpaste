@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 import os
 import sys
+import re
 from optparse import OptionParser
 import ConfigParser
 import getpass
@@ -45,7 +46,7 @@ def get_options():
 		file_user = ''
 
 	default_user = (file_user or os.environ.get('QPASTEUSER')
-		or os.environ.get('USERNAME') or getuser())
+		or os.environ.get('USERNAME') or getpass.getuser())
 
 	parser = OptionParser(usage=dedent(get_options.__doc__).lstrip())
 
@@ -128,16 +129,28 @@ def main():
 	try:
 		res = urllib2.urlopen(req)
 	except urllib2.HTTPError as e:
-		if e.getcode() != 500:
-			raise
-		import pdb; pdb.set_trace()
+		if e.getcode() == 401:
+			print("Invalid username or password", file=sys.stderr)
+			if keyring.enabled:
+				realm = get_realm(e.hdrs['www-authenticate'])
+				auth_manager.clear_password(realm, paste_url)
+				print("Password cleared; Please try again.", file=sys.stderr)
+			return
+		if e.getcode() == 500:
+			import pdb
+			pdb.set_trace()
+		raise
 	url = res.geturl()
 	if clipb: clipb.set_text(url)
-	print 'Paste URL: %s' % url
+	print('Paste URL:', url)
 	if options.browser:
-		print "Now opening browser..."
+		print("Now opening browser...")
 		webbrowser.open(url)
 
+def get_realm(authenticate_header):
+	pattern = re.compile('\w+ realm="(?P<realm>.*)"')
+	res = pattern.match(authenticate_header)
+	return res.groupdict()['realm']
 
 if __name__ == '__main__':
 	main()

@@ -12,3 +12,10 @@ class FixedUserKeyringPasswordManager(base):
 
 	def get_username(self, realm, authuri):
 		return self.username
+
+	# provide clear_password until delete_password is officially
+	#  implemented.
+	def clear_password(self, realm, authuri):
+		user = self.get_username(realm, authuri)
+		# this call will only succeed on WinVault for now
+		keyring.get_keyring().delete_password(realm, user)
