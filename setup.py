@@ -2,7 +2,7 @@ import sys
 import platform
 from collections import defaultdict
 
-from setuptools import find_packages, setup
+import setuptools
 
 py26reqs = ['importlib'] if sys.version_info < (2, 7) else []
 
@@ -11,10 +11,10 @@ clipboard_support = defaultdict(lambda: [], {
 	'Windows': ['jaraco.windows>=2.1'],
 	})[platform.system()]
 
-setup(
+setup_params = dict(
 	name="lpaste",
 	use_hg_version=True,
-	packages=find_packages(),
+	packages=setuptools.find_packages(),
 	entry_points = {
 		'console_scripts': [
 			'lpaste = lpaste.lpaste:main',
@@ -47,3 +47,6 @@ setup(
 	],
 	use_2to3=True,
 )
+
+if __name__ == '__main__':
+	setuptools.setup(**setup_params)
