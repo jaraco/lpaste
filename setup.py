@@ -1,3 +1,4 @@
+import sys
 import platform
 from collections import defaultdict
 
@@ -8,9 +9,11 @@ try:
 except ImportError:
 	from distutils.command.build_py import build_py
 
+py26reqs = ['importlib'] if sys.version_info < (2, 7) else []
+
 # add any platform-specific requirements
 clipboard_support = defaultdict(lambda: [], {
-	'Windows': ['jaraco.windows>=2.1dev'],
+	'Windows': ['jaraco.windows>=2.1'],
 	})[platform.system()]
 
 setup(
@@ -25,7 +28,7 @@ setup(
 	install_requires = [
 		'poster',
 		'keyring>=0.6',
-	],
+	] + py26reqs,
 	extras_require = dict(
 		clipboard = clipboard_support,
 	),
@@ -40,7 +43,8 @@ setup(
 		'Development Status :: 4 - Beta',
 		'License :: OSI Approved :: MIT License',
 		'Operating System :: POSIX',
-		'Programming Language :: Python :: 2',
+		'Programming Language :: Python :: 2.6',
+		'Programming Language :: Python :: 2.7',
 		'Programming Language :: Python :: 3',
 	],
 	setup_requires = [

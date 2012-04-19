@@ -4,23 +4,26 @@ from __future__ import absolute_import, print_function
 import os
 import sys
 import re
-from optparse import OptionParser
 import ConfigParser
 import getpass
-from poster.encode import multipart_encode
-import poster.streaminghttp
 import urllib2
-import webbrowser
+import importlib
+from optparse import OptionParser
 from textwrap import dedent
-from . import keyring
+
 import pkg_resources
+import webbrowser
+import poster.streaminghttp
+from poster.encode import multipart_encode
+
+from . import keyring
+from .source import Source
 
 try:
-	lpaste = __import__('lpaste.%s.clipboard' % sys.platform)
-	clipb = getattr(lpaste, sys.platform).clipboard
+	mod_name = 'lpaste.%s.clipboard' % sys.platform
+	clipb = importlib.import_module(mod_name)
 except ImportError:
 	clipb = None
-from lpaste.source import Source
 
 version = pkg_resources.require('lpaste')[0].version
 
