@@ -13,6 +13,7 @@ import urllib2
 import webbrowser
 from textwrap import dedent
 from . import keyring
+import pkg_resources
 
 try:
 	lpaste = __import__('lpaste.%s.clipboard' % sys.platform)
@@ -21,7 +22,11 @@ except ImportError:
 	clipb = None
 from lpaste.source import Source
 
-BASE_HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2b1) lpaste'}
+version = pkg_resources.require('lpaste')[0].version
+
+BASE_HEADERS = {
+	'User-Agent': 'lpaste ({version}) Python ({sys.version})'.format(**vars())
+}
 
 def install_opener(*handlers):
 	opener = poster.streaminghttp.register_openers()
@@ -29,9 +34,11 @@ def install_opener(*handlers):
 
 def get_options():
 	"""
-	%prog [options] [<file>]
+	$prog [options] [<file>]
 
-	If file is not suplied, stdin will be used.
+	lpaste {version}
+
+	If file is not supplied, stdin will be used.
 	"""
 	fileconf = ConfigParser.ConfigParser()
 	fileconf.read('/etc/lpasterc')
@@ -48,7 +55,7 @@ def get_options():
 	default_user = (file_user or os.environ.get('QPASTEUSER')
 		or os.environ.get('USERNAME') or getpass.getuser())
 
-	parser = OptionParser(usage=dedent(get_options.__doc__).lstrip())
+	parser = OptionParser(usage=dedent(get_options.__doc__.format(**globals())).lstrip())
 
 	parser.add_option('-s', '--site', dest='site',
 		default=default_url,
