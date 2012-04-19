@@ -4,11 +4,6 @@ from collections import defaultdict
 
 from setuptools import find_packages, setup
 
-try:
-	from distutils.command.build_py import build_py_2to3 as build_py
-except ImportError:
-	from distutils.command.build_py import build_py
-
 py26reqs = ['importlib'] if sys.version_info < (2, 7) else []
 
 # add any platform-specific requirements
@@ -50,6 +45,5 @@ setup(
 	setup_requires = [
 		'hgtools',
 	],
-	cmdclass=dict(build_py=build_py),
+	use_2to3=True,
 )
-
