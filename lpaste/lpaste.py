@@ -49,7 +49,7 @@ def get_options():
 	try:
 		default_url = fileconf.get('lpaste', 'url')
 	except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
-		default_url = 'http://a.libpa.st/'
+		default_url = 'http://paste.jaraco.com/'
 	try:
 		file_user = fileconf.get('lpaste', 'user')
 	except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
