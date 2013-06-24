@@ -2,7 +2,6 @@ from __future__ import print_function, with_statement
 import sys
 from cStringIO import StringIO
 import struct
-import functools
 
 import jaraco.windows.clipboard as wclip
 
