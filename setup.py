@@ -35,7 +35,7 @@ setup_params = dict(
 	maintainer_email = 'chmullig@gmail.com',
 	url = 'http://bitbucket.org/chmullig/librarypaste-tools/lpaste',
 	classifiers=[
-		'Development Status :: 4 - Beta',
+		'Development Status :: 5 - Production/Stable',
 		'License :: OSI Approved :: MIT License',
 		'Operating System :: POSIX',
 		'Programming Language :: Python :: 2.6',
