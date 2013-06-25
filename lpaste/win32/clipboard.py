@@ -1,7 +1,7 @@
 from __future__ import print_function, with_statement
 import sys
-from cStringIO import StringIO
 import struct
+import io
 
 import jaraco.windows.clipboard as wclip
 
@@ -18,9 +18,9 @@ def get_image():
 	# construct a header (see http://en.wikipedia.org/wiki/BMP_file_format)
 	offset = 54 # 14 byte BMP header + 40 byte DIB header
 	header = 'BM'+struct.pack('<LLL', len(result), 0, offset)
-	img_stream = StringIO(header+result)
+	img_stream = io.BytesIO(header+result)
 	img = Image.open(img_stream)
-	out_stream = StringIO()
+	out_stream = io.StringIO()
 	img.save(out_stream, format='jpeg')
 	out_stream.seek(0)
 	return out_stream, 'image/jpeg', 'image.jpeg'
@@ -38,7 +38,7 @@ def do_image():
 	return Source.from_stream(*get_image())
 def do_html():
 	snippet = wclip.get_html()
-	return Source.from_stream(StringIO(snippet.html), 'text/html',
+	return Source.from_stream(io.StringIO(snippet.html), 'text/html',
 		'snippet.html')
 def do_text():
 	code = wclip.get_unicode_text()
