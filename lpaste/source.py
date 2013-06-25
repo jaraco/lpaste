@@ -15,7 +15,7 @@ class Source(object):
 			stream = stream,
 			content_type = content_type,
 			filename = filename,
-			)
+		)
 		return source
 
 	def apply(self, data):
@@ -29,6 +29,6 @@ class Source(object):
 		params = dict(
 			fileobj = self.stream,
 			filetype = self.content_type,
-			)
+		)
 		if self.filename: params.update(filename=self.filename)
 		data['file'] = MultipartParam('file', **params)
