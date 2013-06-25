@@ -27,7 +27,7 @@ def get_image():
 
 def try_until_no_exception(*functions):
 	for f in functions:
-		exceptions = getattr(f, 'exceptions', [])
+		exceptions = getattr(f, 'exceptions', ())
 		try:
 			return f()
 		except exceptions:
@@ -60,4 +60,4 @@ def get_source():
 	do_html.exceptions = (TypeError,)
 	return try_until_no_exception(do_image, do_html, do_text)
 
-set_text = wclip.set_text
+set_text = wclip.set_unicode_text

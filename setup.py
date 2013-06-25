@@ -21,7 +21,6 @@ setup_params = dict(
 		],
 	},
 	install_requires = [
-		'poster',
 		'keyring>=0.6',
 	] + py26reqs,
 	extras_require = dict(

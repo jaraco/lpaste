@@ -1,15 +1,19 @@
 import abc
 import mimetypes
-from poster.encode import MultipartParam
+import collections
 
 # add mimetypes not present in Python
 mimetypes.add_type('image/svg+xml', '.svg')
 mimetypes.add_type('application/json', '.json')
 
+# a "file" in requests is a tuple of name, stream, content_type
+RequestsFile = collections.namedtuple('RequestsFile',
+	'filename stream content_type')
+
 class Source(object):
 	@abc.abstractmethod
 	def apply(self, data):
-		"Apply this source to the data"
+		"Apply this source to the data and return any files"
 
 class CodeSource(Source):
 	def __init__(self, code):
@@ -25,13 +29,11 @@ class FileSource(Source):
 		self.filename = filename
 
 	def apply(self, data):
-		if self.filename and not self.content_type:
-			self.content_type, _ = mimetypes.guess_type(self.filename)
-		if not self.content_type:
-			self.content_type = 'application/octet-stream'
-		params = dict(
-			fileobj = self.stream,
-			filetype = self.content_type,
-		)
-		if self.filename: params.update(filename=self.filename)
-		data['file'] = MultipartParam('file', **params)
+		content_type = self.content_type
+		if self.filename and not content_type:
+			content_type, _ = mimetypes.guess_type(self.filename)
+		if not content_type:
+			content_type = 'application/octet-stream'
+		return {
+			'file': RequestsFile(self.filename, self.stream, content_type),
+		}

@@ -25,4 +25,5 @@ def get_source():
 		pass # use default format
 	return src
 
-set_text = macSetClipboard
+def set_text(text):
+	macSetClipboard(text.encode('utf-8'))

@@ -13,8 +13,7 @@ from textwrap import dedent
 
 import pkg_resources
 import webbrowser
-import poster.streaminghttp
-from poster.encode import multipart_encode
+import requests
 
 from . import keyring
 from .source import CodeSource, FileSource
@@ -30,10 +29,6 @@ version = pkg_resources.require('lpaste')[0].version
 BASE_HEADERS = {
 	'User-Agent': 'lpaste ({version}) Python ({sys.version})'.format(**vars())
 }
-
-def install_opener(*handlers):
-	opener = poster.streaminghttp.register_openers()
-	map(opener.add_handler, handlers)
 
 def get_options():
 	"""
@@ -104,15 +99,31 @@ def get_options():
 		stream = open(options.file, 'rb') if not use_stdin else sys.stdin
 		filename = os.path.basename(options.file) if not use_stdin else None
 		if options.attach:
-			source = source.FileSource(stream, filename=filename)
+			source = FileSource(stream, filename=filename)
 		else:
-			source = source.CodeSource(stream.read())
+			source = CodeSource(stream.read())
 
 	options.source = source
 	if hasattr(source, 'format'):
 		options.format = source.format
 	return options
 
+
+def parse_auth_realm(resp):
+	"""
+	From a 401 response, parse out the realm for basic auth.
+	"""
+	header = resp.headers['www-authenticate']
+	mode, _sep, dict = header.partition(' ')
+	assert mode.lower == 'basic'
+	return requests.utils.parse_dict_header(dict)['realm']
+
+def get_auth(options, realm):
+	username = options.auth_username
+	if keyring.enabled:
+		return username, keyring.get_password(realm, username)
+	password = options.auth_password or getpass.getpass()
+	return username, password
 
 def main():
 
@@ -122,36 +133,21 @@ def main():
 	data = {'nick': options.username, 'fmt': options.format, }
 	if not options.longurl:
 		data['makeshort'] = 'True'
-	options.source.apply(data)
-	datagen, headers = multipart_encode(data)
-	headers.update(BASE_HEADERS)
+	files = options.source.apply(data)
+	headers = dict(BASE_HEADERS)
 
-	if keyring.enabled:
-		auth_manager = keyring.FixedUserKeyringPasswordManager(options.auth_username)
-	else:
-		auth_manager = urllib2.HTTPPasswordMgrWithDefaultRealm()
-		auth_manager.add_password(None, options.site,
-			options.auth_username,
-			options.auth_password or getpass.getpass())
-	auth_handler = urllib2.HTTPBasicAuthHandler(auth_manager)
-	install_opener(auth_handler)
-	req = urllib2.Request(paste_url, datagen, headers)
-	try:
-		res = urllib2.urlopen(req)
-	except urllib2.HTTPError as e:
-		if e.getcode() == 401:
-			print("Invalid username or password", file=sys.stderr)
-			if keyring.enabled:
-				realm = get_realm(e.hdrs['www-authenticate'])
-				auth_manager.clear_password(realm, paste_url)
-				print("Password cleared; Please try again.", file=sys.stderr)
-			return
-		if e.getcode() == 500:
-			import pdb
-			pdb.set_trace()
-		raise
-	url = res.geturl()
-	if clipb: clipb.set_text(url)
+	resp = requests.post(paste_url, headers=headers, data=data, files=files)
+	if resp.status_code == 401:
+		realm = parse_auth_realm(resp)
+		auth = get_auth(options, realm)
+		resp = requests.post(paste_url, headers=headers, data=data,
+			files=files, auth=auth)
+	if not resp.ok:
+		import pdb
+		pdb.set_trace()
+		resp.raise_for_status()
+	url = resp.url
+	if clipb: clipb.set_unicode_text(url)
 	print('Paste URL:', url)
 	if options.browser:
 		print("Now opening browser...")
