@@ -6,7 +6,6 @@ import sys
 import re
 import ConfigParser
 import getpass
-import urllib2
 import importlib
 from optparse import OptionParser
 from textwrap import dedent
@@ -15,7 +14,11 @@ import pkg_resources
 import webbrowser
 import requests
 
-from . import keyring
+try:
+	import keyring
+except ImportError:
+	keyring = None
+
 from .source import CodeSource, FileSource
 
 try:
@@ -80,7 +83,7 @@ def get_options():
 		help="Get the input from the clipboard")
 	parser.add_option('--auth-username', default=default_user,
 		help="The username to use when HTTP auth is required",)
-	if not keyring.enabled:
+	if not keyring:
 		parser.add_option('--auth-password',
 			help="The password to use when HTTP auth is required",)
 	options, args = parser.parse_args()
@@ -120,7 +123,7 @@ def parse_auth_realm(resp):
 
 def get_auth(options, realm):
 	username = options.auth_username
-	if keyring.enabled:
+	if keyring:
 		return username, keyring.get_password(realm, username)
 	password = options.auth_password or getpass.getpass()
 	return username, password
