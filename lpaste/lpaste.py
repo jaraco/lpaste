@@ -17,7 +17,7 @@ import poster.streaminghttp
 from poster.encode import multipart_encode
 
 from . import keyring
-from .source import Source
+from .source import CodeSource, FileSource
 
 try:
 	mod_name = 'lpaste.%s.clipboard' % sys.platform
@@ -104,9 +104,9 @@ def get_options():
 		stream = open(options.file, 'rb') if not use_stdin else sys.stdin
 		filename = os.path.basename(options.file) if not use_stdin else None
 		if options.attach:
-			source = Source.from_stream(stream, filename=filename)
+			source = source.FileSource(stream, filename=filename)
 		else:
-			source = Source(code=stream.read())
+			source = source.CodeSource(stream.read())
 
 	options.source = source
 	if hasattr(source, 'format'):

@@ -1,5 +1,5 @@
 import os
-from lpaste.source import Source
+from lpaste.source import CodeSource
 
 # from pyperclip (http://coffeeghost.net/2010/10/09/pyperclip-a-cross-platform-clipboard-module-for-python)
 
@@ -16,7 +16,7 @@ def macGetClipboard():
 
 def get_source():
 	code = macGetClipboard()
-	src = Source(code=code)
+	src = CodeSource(code=code)
 	try:
 		# see if the code can compile as Python
 		compile(code, 'pasted_code.py', 'exec')
