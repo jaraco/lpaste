@@ -5,7 +5,7 @@ import io
 
 import jaraco.windows.clipboard as wclip
 
-from lpaste.source import Source
+from lpaste.source import FileSource, CodeSource
 
 def get_image():
 	try:
@@ -35,14 +35,14 @@ def try_until_no_exception(*functions):
 	raise RuntimeError("No function succeeded")
 
 def do_image():
-	return Source.from_stream(*get_image())
+	return FileSource(*get_image())
 def do_html():
 	snippet = wclip.get_html()
-	return Source.from_stream(io.StringIO(snippet.html), 'text/html',
+	return FileSource(io.StringIO(snippet.html), 'text/html',
 		'snippet.html')
 def do_text():
 	code = wclip.get_unicode_text()
-	src = Source(code=code)
+	src = CodeSource(code)
 	try:
 		# see if the code can compile as Python
 		compile(code, 'pasted_code.py', 'exec')
