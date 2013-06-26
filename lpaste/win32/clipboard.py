@@ -9,7 +9,7 @@ from lpaste.source import FileSource, CodeSource
 
 def get_image():
 	try:
-		import Image
+		from PIL import Image
 	except ImportError:
 		print("PIL not available - image pasting disabled", file=sys.stderr)
 		raise
