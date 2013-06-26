@@ -150,7 +150,7 @@ def main():
 		pdb.set_trace()
 		resp.raise_for_status()
 	url = resp.url
-	if clipb: clipb.set_unicode_text(url)
+	if clipb: clipb.set_text(url)
 	print('Paste URL:', url)
 	if options.browser:
 		print("Now opening browser...")
