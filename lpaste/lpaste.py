@@ -118,7 +118,7 @@ def parse_auth_realm(resp):
 	"""
 	header = resp.headers['www-authenticate']
 	mode, _sep, dict = header.partition(' ')
-	assert mode.lower == 'basic'
+	assert mode.lower() == 'basic'
 	return requests.utils.parse_dict_header(dict)['realm']
 
 def get_auth(options, realm):
