@@ -17,10 +17,10 @@ def get_image():
 		result = wclip.GetClipboardData(wclip.CF_DIB)
 	# construct a header (see http://en.wikipedia.org/wiki/BMP_file_format)
 	offset = 54 # 14 byte BMP header + 40 byte DIB header
-	header = 'BM'+struct.pack('<LLL', len(result), 0, offset)
+	header = b'BM'+struct.pack('<LLL', len(result), 0, offset)
 	img_stream = io.BytesIO(header+result)
 	img = Image.open(img_stream)
-	out_stream = io.StringIO()
+	out_stream = io.BytesIO()
 	img.save(out_stream, format='jpeg')
 	out_stream.seek(0)
 	return out_stream, 'image/jpeg', 'image.jpeg'
