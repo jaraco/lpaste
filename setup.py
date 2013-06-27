@@ -4,7 +4,7 @@ from collections import defaultdict
 
 import setuptools
 
-py26reqs = ['importlib'] if sys.version_info < (2, 7) else []
+py26reqs = ['importlib', 'argparse'] if sys.version_info < (2, 7) else []
 
 # add any platform-specific requirements
 clipboard_support = defaultdict(lambda: [], {

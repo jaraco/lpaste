@@ -7,7 +7,7 @@ import re
 import ConfigParser
 import getpass
 import importlib
-from optparse import OptionParser
+import argparse
 from textwrap import dedent
 
 import pkg_resources
@@ -56,40 +56,39 @@ def get_options():
 	default_user = (file_user or os.environ.get('QPASTEUSER')
 		or os.environ.get('USERNAME') or getpass.getuser())
 
-	parser = OptionParser(usage=dedent(get_options.__doc__.format(**globals())).lstrip())
+	parser = argparse.ArgumentParser(
+		usage=dedent(get_options.__doc__.format(**globals())).lstrip())
 
-	parser.add_option('-s', '--site', dest='site',
+	parser.add_argument('-s', '--site', dest='site',
 		default=default_url,
 		help="URL for the library paste site to use. By default: %s" %
 		default_url)
-	parser.add_option('-t', '--format', dest='format', default='_',
+	parser.add_argument('-t', '--format', dest='format', default='_',
 		help="Which syntax code highlighter would you like to use? "
 		"Defaults to plain text.")
-	parser.add_option('-u', '--username', dest='username',
+	parser.add_argument('-u', '--username', dest='username',
 		default=default_user, help="Username to paste as, attempts to "
 		"use system account name if none specified.")
-	parser.add_option('-l', '--longurl', dest='longurl',
+	parser.add_argument('-l', '--longurl', dest='longurl',
 		action="store_true", default=False,
 		help="Use a long url instead of the default short")
-	parser.add_option('-a', '--attach', dest='attach',
+	parser.add_argument('-a', '--attach', dest='attach',
 		action="store_true", default=False,
 		help="Upload the file as an attachment instead of as code/text")
-	parser.add_option('-b', '--browser', dest='browser',
+	parser.add_argument('-b', '--browser', dest='browser',
 		action="store_true", default=False,
 		help="Open your paste in a new browser window after it's "
 		"uploaded")
-	parser.add_option('-c', '--clipboard',
+	parser.add_argument('-c', '--clipboard',
 		action="store_true", default=False,
 		help="Get the input from the clipboard")
-	parser.add_option('--auth-username', default=default_user,
+	parser.add_argument('--auth-username', default=default_user,
 		help="The username to use when HTTP auth is required",)
+	parser.add_argument('file', nargs='?')
 	if not keyring:
-		parser.add_option('--auth-password',
+		parser.add_argument('--auth-password',
 			help="The password to use when HTTP auth is required",)
-	options, args = parser.parse_args()
-	options.file = args.pop() if args else None
-	if args:
-		parser.error("At most one positional arg (file) is allowed.")
+	options = parser.parse_args()
 	if options.file and options.clipboard:
 		parser.error("Either supply a file or --clipboard, but not both")
 	if options.clipboard:
