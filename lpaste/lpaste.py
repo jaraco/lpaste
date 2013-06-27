@@ -8,6 +8,7 @@ import ConfigParser
 import getpass
 import importlib
 import argparse
+import logging
 from textwrap import dedent
 
 import pkg_resources
@@ -32,6 +33,9 @@ version = pkg_resources.require('lpaste')[0].version
 BASE_HEADERS = {
 	'User-Agent': 'lpaste ({version}) Python ({sys.version})'.format(**vars())
 }
+
+def log_level(level_str):
+	return getattr(logging, level_str.upper())
 
 def get_options():
 	"""
@@ -84,6 +88,8 @@ def get_options():
 		help="Get the input from the clipboard")
 	parser.add_argument('--auth-username', default=default_user,
 		help="The username to use when HTTP auth is required",)
+	parser.add_argument('--log-level', default=logging.INFO,
+		type=log_level)
 	parser.add_argument('file', nargs='?')
 	if not keyring:
 		parser.add_argument('--auth-password',
@@ -130,6 +136,7 @@ def get_auth(options, realm):
 def main():
 
 	options = get_options()
+	logging.basicConfig(level=options.log_level)
 
 	paste_url = options.site
 	data = {'nick': options.username, 'fmt': options.format, }
