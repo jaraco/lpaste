@@ -29,6 +29,7 @@ except ImportError:
 	clipb = None
 
 version = pkg_resources.require('lpaste')[0].version
+session = requests.Session()
 
 BASE_HEADERS = {
 	'User-Agent': 'lpaste ({version}) Python ({sys.version})'.format(**vars())
@@ -145,11 +146,11 @@ def main():
 	files = options.source.apply(data)
 	headers = dict(BASE_HEADERS)
 
-	resp = requests.post(paste_url, headers=headers, data=data, files=files)
+	resp = session.post(paste_url, headers=headers, data=data, files=files)
 	if resp.status_code == 401:
 		realm = parse_auth_realm(resp)
 		auth = get_auth(options, realm)
-		resp = requests.post(paste_url, headers=headers, data=data,
+		resp = session.post(paste_url, headers=headers, data=data,
 			files=files, auth=auth)
 	if not resp.ok:
 		import pdb
