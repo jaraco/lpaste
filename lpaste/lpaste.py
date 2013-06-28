@@ -9,6 +9,7 @@ import getpass
 import importlib
 import argparse
 import logging
+import httplib
 from textwrap import dedent
 
 import pkg_resources
@@ -89,7 +90,7 @@ def get_options():
 		help="Get the input from the clipboard")
 	parser.add_argument('--auth-username', default=default_user,
 		help="The username to use when HTTP auth is required",)
-	parser.add_argument('--log-level', default=logging.INFO,
+	parser.add_argument('--log-level', default=logging.WARNING,
 		type=log_level)
 	parser.add_argument('file', nargs='?')
 	if not keyring:
@@ -134,10 +135,20 @@ def get_auth(options, realm):
 	password = options.auth_password or getpass.getpass()
 	return username, password
 
+def configure_logging(level):
+	logging.basicConfig(level=level)
+
+	requests_log = logging.getLogger("requests.packages.urllib3")
+	requests_log.setLevel(level)
+	requests_log.propagate = True
+
+	# enable debugging at httplib level (requests->urllib3->httplib)
+	httplib.HTTPConnection.debuglevel = level <= logging.DEBUG
+
 def main():
 
 	options = get_options()
-	logging.basicConfig(level=options.log_level)
+	configure_logging(options.log_level)
 
 	paste_url = options.site
 	data = {'nick': options.username, 'fmt': options.format, }
