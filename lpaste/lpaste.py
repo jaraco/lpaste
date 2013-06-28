@@ -157,12 +157,14 @@ def main():
 	files = options.source.apply(data)
 	headers = dict(BASE_HEADERS)
 
-	resp = session.post(paste_url, headers=headers, data=data, files=files)
+	# get the home page first just to see if auth is required
+	resp = session.get(paste_url)
+	auth = None
 	if resp.status_code == 401:
 		realm = parse_auth_realm(resp)
 		auth = get_auth(options, realm)
-		resp = session.post(paste_url, headers=headers, data=data,
-			files=files, auth=auth)
+	resp = session.post(paste_url, headers=headers, data=data, files=files,
+		auth=auth)
 	if not resp.ok:
 		import pdb
 		pdb.set_trace()
