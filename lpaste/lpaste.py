@@ -10,6 +10,7 @@ import importlib
 import argparse
 import logging
 import httplib
+import pdb
 from textwrap import dedent
 
 import pkg_resources
@@ -92,6 +93,8 @@ def get_options():
 		help="The username to use when HTTP auth is required",)
 	parser.add_argument('--log-level', default=logging.WARNING,
 		type=log_level)
+	parser.add_argument('--debug', default=False, action='store_true',
+		help="Drop into a PDB prompt if the POST fails.")
 	parser.add_argument('file', nargs='?')
 	if not keyring:
 		parser.add_argument('--auth-password',
@@ -165,10 +168,9 @@ def main():
 		auth = get_auth(options, realm)
 	resp = session.post(paste_url, headers=headers, data=data, files=files,
 		auth=auth)
-	if not resp.ok:
-		import pdb
+	if not resp.ok and options.debug:
 		pdb.set_trace()
-		resp.raise_for_status()
+	resp.raise_for_status()
 	url = resp.url
 	if clipb: clipb.set_text(url)
 	print('Paste URL:', url)
