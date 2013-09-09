@@ -4,14 +4,14 @@ from __future__ import absolute_import, print_function
 import os
 import sys
 import re
-import ConfigParser
 import getpass
 import importlib
 import argparse
 import logging
-import httplib
 import pdb
 from textwrap import dedent
+
+from six.moves import configparser, http_client
 
 import pkg_resources
 import webbrowser
@@ -48,16 +48,16 @@ def get_options():
 
 	If file is not supplied, stdin will be used.
 	"""
-	fileconf = ConfigParser.ConfigParser()
+	fileconf = configparser.ConfigParser()
 	fileconf.read('/etc/lpasterc')
 	fileconf.read(os.path.expanduser('~/.lpasterc'))
 	try:
 		default_url = fileconf.get('lpaste', 'url')
-	except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+	except (configparser.NoOptionError, configparser.NoSectionError):
 		default_url = 'http://paste.jaraco.com/'
 	try:
 		file_user = fileconf.get('lpaste', 'user')
-	except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+	except (configparser.NoOptionError, configparser.NoSectionError):
 		file_user = ''
 
 	default_user = (file_user or os.environ.get('QPASTEUSER')
@@ -145,8 +145,8 @@ def configure_logging(level):
 	requests_log.setLevel(level)
 	requests_log.propagate = True
 
-	# enable debugging at httplib level (requests->urllib3->httplib)
-	httplib.HTTPConnection.debuglevel = level <= logging.DEBUG
+	# enable debugging at http.client level (requests->urllib3->http.client)
+	http_client.HTTPConnection.debuglevel = level <= logging.DEBUG
 
 def main():
 

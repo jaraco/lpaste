@@ -23,6 +23,7 @@ setup_params = dict(
 	install_requires = [
 		'requests',
 		'keyring>=0.6',
+		'six>=1.4',
 	] + py26reqs,
 	extras_require = dict(
 		clipboard = clipboard_support,
@@ -45,7 +46,6 @@ setup_params = dict(
 	setup_requires = [
 		'hgtools',
 	],
-	use_2to3=True,
 )
 
 if __name__ == '__main__':
