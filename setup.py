@@ -8,7 +8,7 @@ py26reqs = ['importlib', 'argparse'] if sys.version_info < (2, 7) else []
 
 # add any platform-specific requirements
 clipboard_support = defaultdict(lambda: [], {
-	'Windows': ['jaraco.windows>=2.1'],
+	'Windows': ['jaraco.windows>=3.1'],
 	})[platform.system()]
 
 setup_params = dict(

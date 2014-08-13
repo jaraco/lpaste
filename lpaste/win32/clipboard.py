@@ -13,8 +13,7 @@ def get_image():
 	except ImportError:
 		print("PIL not available - image pasting disabled", file=sys.stderr)
 		raise
-	with wclip.context():
-		result = wclip.GetClipboardData(wclip.CF_DIB)
+	result = wclip.get_image()
 	# construct a header (see http://en.wikipedia.org/wiki/BMP_file_format)
 	offset = 54 # 14 byte BMP header + 40 byte DIB header
 	header = b'BM'+struct.pack('<LLL', len(result), 0, offset)
