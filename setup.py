@@ -1,10 +1,7 @@
-import sys
 import platform
 from collections import defaultdict
 
 import setuptools
-
-py26reqs = ['importlib', 'argparse'] if sys.version_info < (2, 7) else []
 
 # add any platform-specific requirements
 clipboard_support = defaultdict(lambda: [], {
@@ -24,7 +21,7 @@ setup_params = dict(
 		'requests',
 		'keyring>=0.6',
 		'six>=1.4',
-	] + py26reqs,
+	],
 	extras_require = dict(
 		clipboard = clipboard_support,
 	),
@@ -39,7 +36,6 @@ setup_params = dict(
 		'Development Status :: 5 - Production/Stable',
 		'License :: OSI Approved :: MIT License',
 		'Operating System :: POSIX',
-		'Programming Language :: Python :: 2.6',
 		'Programming Language :: Python :: 2.7',
 		'Programming Language :: Python :: 3',
 	],
