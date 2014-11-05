@@ -29,9 +29,9 @@ setup_params = dict(
 	license = 'MIT',
 	author="Chris Mulligan",
 	author_email="chmullig@gmail.com",
-	maintainer = 'Chris Mulligan',
-	maintainer_email = 'chmullig@gmail.com',
-	url = 'http://bitbucket.org/chmullig/librarypaste-tools/lpaste',
+	maintainer = 'Jason R. Coombs',
+	maintainer_email = 'jaraco@jaraco.com',
+	url = 'https://bitbucket.org/jaraco/lpaste',
 	classifiers=[
 		'Development Status :: 5 - Production/Stable',
 		'License :: OSI Approved :: MIT License',
