@@ -42,12 +42,7 @@ def do_html():
 def do_text():
 	code = wclip.get_unicode_text()
 	src = CodeSource(code)
-	try:
-		# see if the code can compile as Python
-		compile(code, 'pasted_code.py', 'exec')
-		src.format = 'python'
-	except:
-		pass # use default format
+	src.check_python()
 	return src
 
 def get_source():

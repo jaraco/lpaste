@@ -22,6 +22,15 @@ class CodeSource(Source):
 	def apply(self, data):
 		data['code'] = self.code
 
+	def check_python(self):
+		try:
+			# see if the code can compile as Python
+			compile(self.code, 'pasted_code.py', 'exec')
+			self.format = 'python'
+		except:
+			pass # use default format
+
+
 class FileSource(Source):
 	def __init__(self, stream, content_type=None, filename=None):
 		self.stream = stream

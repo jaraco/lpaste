@@ -17,12 +17,7 @@ def macGetClipboard():
 def get_source():
 	code = macGetClipboard()
 	src = CodeSource(code=code)
-	try:
-		# see if the code can compile as Python
-		compile(code, 'pasted_code.py', 'exec')
-		src.format = 'python'
-	except:
-		pass # use default format
+	src.check_python()
 	return src
 
 def set_text(text):
