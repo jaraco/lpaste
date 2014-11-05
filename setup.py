@@ -12,26 +12,26 @@ setup_params = dict(
 	name="lpaste",
 	use_hg_version=True,
 	packages=setuptools.find_packages(),
-	entry_points = {
+	entry_points={
 		'console_scripts': [
-			'lpaste = lpaste.lpaste:main',
+			'lpaste=lpaste.lpaste:main',
 		],
 	},
-	install_requires = [
+	install_requires=[
 		'requests',
 		'keyring>=0.6',
 		'six>=1.4',
 	],
-	extras_require = dict(
-		clipboard = clipboard_support,
+	extras_require=dict(
+		clipboard=clipboard_support,
 	),
 	description="Library Paste command-line client",
-	license = 'MIT',
+	license='MIT',
 	author="Chris Mulligan",
 	author_email="chmullig@gmail.com",
-	maintainer = 'Jason R. Coombs',
-	maintainer_email = 'jaraco@jaraco.com',
-	url = 'https://bitbucket.org/jaraco/lpaste',
+	maintainer='Jason R. Coombs',
+	maintainer_email='jaraco@jaraco.com',
+	url='https://bitbucket.org/jaraco/lpaste',
 	classifiers=[
 		'Development Status :: 5 - Production/Stable',
 		'License :: OSI Approved :: MIT License',
@@ -39,7 +39,7 @@ setup_params = dict(
 		'Programming Language :: Python :: 2.7',
 		'Programming Language :: Python :: 3',
 	],
-	setup_requires = [
+	setup_requires=[
 		'hgtools',
 	],
 )
