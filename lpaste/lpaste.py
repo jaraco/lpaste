@@ -9,8 +9,9 @@ import argparse
 import logging
 import pdb
 from textwrap import dedent
+import socket
 
-from six.moves import configparser, http_client
+from six.moves import http_client
 
 import pkg_resources
 import webbrowser
@@ -33,11 +34,25 @@ version = pkg_resources.require('lpaste')[0].version
 session = requests.Session()
 
 BASE_HEADERS = {
-	'User-Agent': 'lpaste ({version}) Python ({sys.version})'.format(**vars())
+	'User-Agent': 'lpaste ({version}) Python ({sys.version})'.format(**locals())
 }
 
 def log_level(level_str):
 	return getattr(logging, level_str.upper())
+
+def _resolve_url():
+    """
+    if 'paste' resolves in this environment, use the hostname for which
+    that name resolves.
+    Override with 'LIBRARYPASTE_URL'
+    """
+    try:
+        name, aliaslist, addresslist = socket.gethostbyname_ex('paste')
+    except socket.gaierror:
+    	# jaraco generously hosts paste for the world
+        name = 'paste.jaraco.com'
+    fallback = 'https://{name}/'.format(name=name)
+    return os.environ.get('LIBRARYPASTE_URL', fallback)
 
 def get_options():
 	"""
@@ -47,20 +62,8 @@ def get_options():
 
 	If file is not supplied, stdin will be used.
 	"""
-	fileconf = configparser.ConfigParser()
-	fileconf.read('/etc/lpasterc')
-	fileconf.read(os.path.expanduser('~/.lpasterc'))
-	try:
-		default_url = fileconf.get('lpaste', 'url')
-	except (configparser.NoOptionError, configparser.NoSectionError):
-		default_url = 'http://paste.jaraco.com/'
-	try:
-		file_user = fileconf.get('lpaste', 'user')
-	except (configparser.NoOptionError, configparser.NoSectionError):
-		file_user = ''
-
-	default_user = (file_user or os.environ.get('QPASTEUSER')
-		or os.environ.get('USERNAME') or getpass.getuser())
+	default_url = _resolve_url()
+	default_user = os.environ.get('LIBRARYPASTE_USER', getpass.getuser())
 
 	parser = argparse.ArgumentParser(
 		usage=dedent(get_options.__doc__.format(**globals())).lstrip())
