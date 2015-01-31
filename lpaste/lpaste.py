@@ -55,18 +55,12 @@ def _resolve_url():
     return os.environ.get('LIBRARYPASTE_URL', fallback)
 
 def get_options():
-	"""
-	$prog [options] [<file>]
-
-	lpaste {version}
-
-	If file is not supplied, stdin will be used.
-	"""
 	default_url = _resolve_url()
 	default_user = os.environ.get('LIBRARYPASTE_USER', getpass.getuser())
 
-	parser = argparse.ArgumentParser(
-		usage=dedent(get_options.__doc__.format(**globals())).lstrip())
+	description = "version {version}".format(**globals())
+
+	parser = argparse.ArgumentParser(description=description)
 
 	parser.add_argument('-s', '--site', dest='site',
 		default=default_url,
@@ -97,7 +91,8 @@ def get_options():
 		type=log_level)
 	parser.add_argument('--debug', default=False, action='store_true',
 		help="Drop into a PDB prompt if the POST fails.")
-	parser.add_argument('file', nargs='?')
+	parser.add_argument('file', nargs='?',
+		help="If file is not supplied, stdin will be used.")
 	if not keyring:
 		parser.add_argument('--auth-password',
 			help="The password to use when HTTP auth is required",)
