@@ -32,6 +32,7 @@ except ImportError:
 
 version = pkg_resources.require('lpaste')[0].version
 session = requests.Session()
+log = logging.getLogger(__name__)
 
 BASE_HEADERS = {
 	'User-Agent': 'lpaste ({version}) Python ({sys.version})'.format(**locals())
@@ -162,6 +163,8 @@ def main():
 
 	options = get_options()
 	configure_logging(options.log_level)
+
+	log.info("Using {site}".format(**vars(options)))
 
 	paste_url = options.site
 	data = {'nick': options.username, 'fmt': options.format, }
