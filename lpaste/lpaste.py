@@ -8,7 +8,6 @@ import importlib
 import argparse
 import logging
 import pdb
-from textwrap import dedent
 import socket
 
 from six.moves import http_client
