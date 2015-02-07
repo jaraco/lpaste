@@ -9,6 +9,7 @@ import argparse
 import logging
 import pdb
 import socket
+import functools
 
 from six.moves import http_client
 
@@ -144,6 +145,19 @@ def configure_logging(level):
 	# enable debugging at http.client level (requests->urllib3->http.client)
 	http_client.HTTPConnection.debuglevel = level <= logging.DEBUG
 
+def detect_auth(url, resolver):
+	"""
+	Load the root URL to determine if auth is required. `resolver` should
+	resolve a realm to an auth parameter.
+
+	Return an auth parameter suitable for a request parameter.
+	"""
+	resp = session.get(url)
+	if resp.status_code != 401:
+		return None
+	realm = parse_auth_realm(resp)
+	return resolver(realm)
+
 def main():
 
 	options = get_options()
@@ -156,12 +170,8 @@ def main():
 	files = options.source.apply(data)
 	headers = dict(BASE_HEADERS)
 
-	# get the home page first just to see if auth is required
-	resp = session.get(paste_url)
-	auth = None
-	if resp.status_code == 401:
-		realm = parse_auth_realm(resp)
-		auth = get_auth(options, realm)
+	resolver = functools.partial(get_auth, options)
+	auth = detect_auth(paste_url, resolver)
 	resp = session.post(paste_url, headers=headers, data=data, files=files,
 		auth=auth)
 	if not resp.ok and options.debug:
