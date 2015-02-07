@@ -52,8 +52,19 @@ def _resolve_url():
     except socket.gaierror:
     	# jaraco generously hosts paste for the world
         name = 'paste.jaraco.com'
+    name = _patch_heroku(name, aliaslist)
     fallback = 'https://{name}/'.format(name=name)
     return os.environ.get('LIBRARYPASTE_URL', fallback)
+
+def _patch_heroku(name, aliases):
+	"""
+	Heroku will resolve its host to a name which fails SSL validation. Find a
+	preferable name from the aliases.
+	"""
+	if name.endswith('.route.herokuapp.com'):
+		matches = filter(re.compile(r'[^.]*\.herokuapp\.com').match, aliases)
+		name = next(matches, name)
+	return name
 
 def get_options():
 	default_url = _resolve_url()
