@@ -1,3 +1,4 @@
+import io
 import abc
 import mimetypes
 import collections
@@ -46,3 +47,7 @@ class FileSource(Source):
 		return {
 			'file': RequestsFile(self.filename, self.stream, content_type),
 		}
+
+	@classmethod
+	def from_snippet(cls, snippet):
+		return cls(io.StringIO(snippet), 'text/html', 'snippet.html')
