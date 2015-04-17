@@ -37,8 +37,7 @@ def do_image():
 	return FileSource(*get_image())
 def do_html():
 	snippet = wclip.get_html()
-	return FileSource(io.StringIO(snippet.html), 'text/html',
-		'snippet.html')
+	return FileSource(io.StringIO(snippet.html), 'text/html', 'snippet.html')
 def do_text():
 	code = wclip.get_unicode_text()
 	src = CodeSource(code)

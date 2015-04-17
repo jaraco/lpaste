@@ -1,11 +1,25 @@
-import pyperclip
+import io
 
-from lpaste.source import CodeSource
+import richxerox
 
-def get_source():
-	code = pyperclip.paste()
+from lpaste.source import CodeSource, FileSource
+
+def do_html():
+	snippet = richxerox.paste('html')
+	return FileSource(io.StringIO(snippet), 'text/html', 'snippet.html')
+
+def do_text():
+	code = richxerox.paste()
 	src = CodeSource(code=code)
 	src.check_python()
 	return src
 
-set_text = pyperclip.copy
+def get_source():
+	try:
+		do_html()
+	except:
+		pass
+
+	return do_text()
+
+set_text = richxerox.copy
