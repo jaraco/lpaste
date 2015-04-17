@@ -6,6 +6,7 @@ import setuptools
 # add any platform-specific requirements
 clipboard_support = defaultdict(lambda: [], {
 	'Windows': ['jaraco.windows>=3.1'],
+	'Darwin': ['pyperclip'],
 	})[platform.system()]
 
 setup_params = dict(
