@@ -37,8 +37,8 @@ def try_until_no_exception(*functions):
 def do_image():
 	return FileSource(*get_image())
 def do_html():
-	snippet = jaraco.clipboard.paste_html()
-	return FileSource.from_snippet(snippet.html)
+	value = jaraco.clipboard.paste_html()
+	return FileSource.from_snippet(value)
 def do_text():
 	code = jaraco.clipboard.paste_text()
 	src = CodeSource(code)
