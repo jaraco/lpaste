@@ -4,7 +4,6 @@ import os
 import sys
 import re
 import getpass
-import importlib
 import argparse
 import logging
 import pdb
@@ -25,10 +24,9 @@ except ImportError:
 from .source import CodeSource, FileSource
 
 try:
-	mod_name = 'lpaste.%s.clipboard' % sys.platform
-	clipb = importlib.import_module(mod_name)
+	from . import clipboard
 except ImportError:
-	clipb = None
+	pass
 
 version = pkg_resources.require('lpaste')[0].version
 session = requests.Session()
@@ -112,10 +110,10 @@ def get_options():
 	if options.file and options.clipboard:
 		parser.error("Either supply a file or --clipboard, but not both")
 	if options.clipboard:
-		if not clipb:
+		if not 'clipboard' in globals():
 			parser.error("Clipboard support not available - you must "
 				"supply a file")
-		source = clipb.get_source()
+		source = clipboard.get_source()
 	else:
 		use_stdin = options.file in (None, '-')
 		stream = open(options.file, 'rb') if not use_stdin else sys.stdin
@@ -192,7 +190,8 @@ def main():
 		pdb.set_trace()
 	resp.raise_for_status()
 	url = resp.url
-	if clipb: clipb.set_text(url)
+	if 'clipboard' in globals():
+		clipboard.set_text(url)
 	print('Paste URL:', url)
 	if options.browser:
 		print("Now opening browser...")
