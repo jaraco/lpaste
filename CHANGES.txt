@@ -1,3 +1,9 @@
+3.2
+===
+
+Use `jaraco.clipboard <https://pypi.python.org/pypi/jaraco.clipboard>`_
+for multi-platform clipboard support.
+
 3.1
 ===
 
