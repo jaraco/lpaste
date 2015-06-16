@@ -38,6 +38,8 @@ def do_image():
 	return FileSource(*get_image())
 def do_html():
 	value = jaraco.clipboard.paste_html()
+	if value is None:
+		raise ValueError("No HTML value")
 	return FileSource.from_snippet(value)
 def do_text():
 	code = jaraco.clipboard.paste_text()
@@ -51,7 +53,7 @@ def get_source():
 	"""
 	# try getting an image or html over just text
 	do_image.exceptions = (TypeError, ImportError)
-	do_html.exceptions = (TypeError,)
+	do_html.exceptions = (TypeError, ValueError)
 	return try_until_no_exception(do_image, do_html, do_text)
 
 set_text = jaraco.clipboard.copy_text
