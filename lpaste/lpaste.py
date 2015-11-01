@@ -32,8 +32,11 @@ version = pkg_resources.require('lpaste')[0].version
 session = requests.Session()
 log = logging.getLogger(__name__)
 
+py_version = re.sub(r'\s*\n\s*', '; ', sys.version, re.M)
+agent = 'lpaste ({version}) Python ({py_version})'.format(**locals())
+
 BASE_HEADERS = {
-	'User-Agent': 'lpaste ({version}) Python ({sys.version})'.format(**locals())
+	'User-Agent': agent,
 }
 
 def log_level(level_str):
