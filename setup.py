@@ -28,8 +28,12 @@ setup_params = dict(
 	packages=setuptools.find_packages(),
 	include_package_data=True,
 	install_requires=[
+		'requests',
+		'keyring>=0.6',
+		'six>=1.4',
 	],
 	extras_require={
+		'clipboard': 'jaraco.clipboard',
 	},
 	setup_requires=[
 		'setuptools_scm',
@@ -45,6 +49,9 @@ setup_params = dict(
 		"Programming Language :: Python :: 3",
 	],
 	entry_points={
+		'console_scripts': [
+			'lpaste=lpaste.lpaste:main',
+		],
 	},
 )
 if __name__ == '__main__':
