@@ -1,5 +1,5 @@
 Welcome to lpaste documentation!
-========================================
+================================
 
 .. toctree::
    :maxdepth: 1
