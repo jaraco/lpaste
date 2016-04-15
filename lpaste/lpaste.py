@@ -43,19 +43,20 @@ def log_level(level_str):
 	return getattr(logging, level_str.upper())
 
 def _resolve_url():
-    """
-    if 'paste' resolves in this environment, use the hostname for which
-    that name resolves.
-    Override with 'LIBRARYPASTE_URL'
-    """
-    try:
-        name, aliaslist, addresslist = socket.gethostbyname_ex('paste')
-    except socket.gaierror:
-    	# jaraco generously hosts paste for the world
-        name = 'paste.jaraco.com'
-    name = _patch_heroku(name, aliaslist)
-    fallback = 'https://{name}/'.format(name=name)
-    return os.environ.get('LIBRARYPASTE_URL', fallback)
+	"""
+	if 'paste' resolves in this environment, use the hostname for which
+	that name resolves.
+	Override with 'LIBRARYPASTE_URL'
+	"""
+	try:
+		name, aliaslist, addresslist = socket.gethostbyname_ex('paste')
+	except socket.gaierror:
+		# jaraco generously hosts paste for the world
+		name = 'paste.jaraco.com'
+		name, aliaslist, addresslist = socket.gethostbyname_ex(name)
+	name = _patch_heroku(name, aliaslist)
+	fallback = 'https://{name}/'.format(name=name)
+	return os.environ.get('LIBRARYPASTE_URL', fallback)
 
 def _patch_heroku(name, aliases):
 	"""

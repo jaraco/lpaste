@@ -1,3 +1,11 @@
+3.4.1
+=====
+
+Fixed issue in _resolve_url where aliaslist was referenced
+before being defined (when paste didn't resolve).
+
+Also corrected indentation in that function.
+
 3.4
 ===
 
