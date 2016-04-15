@@ -6,7 +6,7 @@ import io
 
 import jaraco.clipboard
 
-from lpaste.source import FileSource, CodeSource
+from .source import FileSource, CodeSource
 
 def get_image():
 	try:
