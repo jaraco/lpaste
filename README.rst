@@ -1,10 +1,23 @@
-lpaste
-======
+.. image:: https://img.shields.io/pypi/v/lpaste.svg
+   :target: https://pypi.org/project/lpaste
 
-``lpaste`` is a command-line client for librarypaste. The client can
+.. image:: https://img.shields.io/pypi/pyversions/lpaste.svg
+
+.. image:: https://img.shields.io/pypi/dm/lpaste.svg
+
+.. image:: https://img.shields.io/travis/jaraco/lpaste/master.svg
+   :target: http://travis-ci.org/jaraco/lpaste
+
+A command-line client for librarypaste. The client can
 paste code or attachments.
 
-Install with "easy_install lpaste" or "pip install lpaste".
+
+License
+=======
+
+License is indicated in the project metadata (typically one or more
+of the Trove classifiers). For more details, see `this explanation
+<https://github.com/jaraco/skeleton/issues/1>`_.
 
 
 OS X App
