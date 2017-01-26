@@ -52,7 +52,7 @@ def get_source():
 	Return lpaste.Source for the content on the clipboard
 	"""
 	# try getting an image or html over just text
-	do_image.exceptions = TypeError, ImportError
+	do_image.exceptions = TypeError, ImportError, NotImplementedError
 	do_html.exceptions = TypeError, ValueError
 	return try_until_no_exception(do_image, do_html, do_text)
 
