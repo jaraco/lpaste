@@ -1,3 +1,8 @@
+3.4.2
+=====
+
+Fixed NotImplementedError on Mac.
+
 3.4.1
 =====
 
