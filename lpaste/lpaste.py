@@ -162,6 +162,8 @@ def get_auth(options, realm):
 		password = keyring.get_password(realm, username)
 	if not password:
 		password = getpass.getpass()
+	if password and keyring and not keyring.get_password(realm, username):
+		keyring.set_password(realm, username, password)
 	return username, password
 
 
