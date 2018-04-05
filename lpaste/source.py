@@ -8,13 +8,16 @@ mimetypes.add_type('image/svg+xml', '.svg')
 mimetypes.add_type('application/json', '.json')
 
 # a "file" in requests is a tuple of name, stream, content_type
-RequestsFile = collections.namedtuple('RequestsFile',
+RequestsFile = collections.namedtuple(
+	'RequestsFile',
 	'filename stream content_type')
+
 
 class Source(object):
 	@abc.abstractmethod
 	def apply(self, data):
 		"Apply this source to the data and return any files"
+
 
 class CodeSource(Source):
 	def __init__(self, code):
@@ -28,8 +31,8 @@ class CodeSource(Source):
 			# see if the code can compile as Python
 			compile(self.code, 'pasted_code.py', 'exec')
 			self.format = 'python'
-		except:
-			pass # use default format
+		except Exception:
+			pass  # use default format
 
 
 class FileSource(Source):

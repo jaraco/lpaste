@@ -8,6 +8,7 @@ import jaraco.clipboard
 
 from .source import FileSource, CodeSource
 
+
 def get_image():
 	try:
 		from PIL import Image
@@ -16,14 +17,15 @@ def get_image():
 		raise
 	result = jaraco.clipboard.paste_image()
 	# construct a header (see http://en.wikipedia.org/wiki/BMP_file_format)
-	offset = 54 # 14 byte BMP header + 40 byte DIB header
-	header = b'BM'+struct.pack('<LLL', len(result), 0, offset)
-	img_stream = io.BytesIO(header+result)
+	offset = 54  # 14 byte BMP header + 40 byte DIB header
+	header = b'BM' + struct.pack('<LLL', len(result), 0, offset)
+	img_stream = io.BytesIO(header + result)
 	img = Image.open(img_stream)
 	out_stream = io.BytesIO()
 	img.save(out_stream, format='jpeg')
 	out_stream.seek(0)
 	return out_stream, 'image/jpeg', 'image.jpeg'
+
 
 def try_until_no_exception(*functions):
 	for f in functions:
@@ -34,18 +36,24 @@ def try_until_no_exception(*functions):
 			pass
 	raise RuntimeError("No function succeeded")
 
+
 def do_image():
 	return FileSource(*get_image())
+
+
 def do_html():
 	value = jaraco.clipboard.paste_html()
 	if value is None:
 		raise ValueError("No HTML value")
 	return FileSource.from_snippet(value)
+
+
 def do_text():
 	code = jaraco.clipboard.paste_text()
 	src = CodeSource(code)
 	src.check_python()
 	return src
+
 
 def get_source():
 	"""
@@ -55,5 +63,6 @@ def get_source():
 	do_image.exceptions = TypeError, ImportError, NotImplementedError
 	do_html.exceptions = TypeError, ValueError
 	return try_until_no_exception(do_image, do_html, do_text)
+
 
 set_text = jaraco.clipboard.copy_text
