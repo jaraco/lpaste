@@ -119,8 +119,8 @@ def get_options():
 		'file', nargs='?',
 		help="If file is not supplied, stdin will be used.")
 	parser.add_argument(
-        '--auth-password',
-		help="The password to use when HTTP auth is required",)
+		'--auth-password',
+		help="The password to use when HTTP auth is required", )
 	options = parser.parse_args()
 	if options.file and options.clipboard:
 		parser.error("Either supply a file or --clipboard, but not both")
