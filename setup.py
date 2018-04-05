@@ -11,6 +11,11 @@ with io.open('README.rst', encoding='utf-8') as readme:
 
 name = 'lpaste'
 description = 'Library Paste command-line client'
+nspkg_technique = 'native'
+"""
+Does this package use "native" namespace packages or
+pkg_resources "managed" namespace packages?
+"""
 
 params = dict(
 	name=name,
@@ -24,13 +29,35 @@ params = dict(
 	url="https://github.com/jaraco/" + name,
 	packages=setuptools.find_packages(),
 	include_package_data=True,
-	namespace_packages=name.split('.')[:-1],
+	namespace_packages=(
+		name.split('.')[:-1] if nspkg_technique == 'managed'
+		else []
+	),
+	python_requires='>=3.5',
 	install_requires=[
 		'requests',
 		'keyring>=0.6',
-		'six>=1.4',
+		'jaraco.context',
 	],
 	extras_require={
+		'testing': [
+			# upstream
+			'pytest>=3.5',
+			'pytest-sugar>=0.9.1',
+			'collective.checkdocs',
+			'pytest-flake8',
+
+			# local
+			'pyobjc; sys_platform=="darwin"',
+		],
+		'docs': [
+			# upstream
+			'sphinx',
+			'jaraco.packaging>=3.2',
+			'rst.linker>=1.9',
+
+			# local
+		],
 		'clipboard': 'jaraco.clipboard',
 	},
 	setup_requires=[
@@ -40,7 +67,7 @@ params = dict(
 		"Development Status :: 5 - Production/Stable",
 		"Intended Audience :: Developers",
 		"License :: OSI Approved :: MIT License",
-		"Programming Language :: Python :: 2.7",
+		"Programming Language :: Python :: 3 :: only",
 		"Programming Language :: Python :: 3",
 	],
 	entry_points={

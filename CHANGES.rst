@@ -1,3 +1,13 @@
+4.0
+===
+
+Dropped support for Python 3.4 and earlier, including Python 2.7.
+
+3.5.0
+=====
+
+Project metadata refresh and maintenance release.
+
 3.4.2
 =====
 
