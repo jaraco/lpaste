@@ -16,7 +16,7 @@ RequestsFile = collections.namedtuple(
 	'filename stream content_type')
 
 
-class Source(object):
+class Source:
 	@abc.abstractmethod
 	def apply(self, data):
 		"Apply this source to the data and return any files"
