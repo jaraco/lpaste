@@ -107,8 +107,7 @@ def get_options():
 		help="Drop into a PDB prompt if the POST fails.")
 	parser.add_argument('file', nargs='?',
 		help="If file is not supplied, stdin will be used.")
-	if not keyring:
-		parser.add_argument('--auth-password',
+	parser.add_argument('--auth-password',
 			help="The password to use when HTTP auth is required",)
 	options = parser.parse_args()
 	if options.file and options.clipboard:
@@ -144,9 +143,11 @@ def parse_auth_realm(resp):
 
 def get_auth(options, realm):
 	username = options.auth_username
-	if keyring:
-		return username, keyring.get_password(realm, username)
-	password = options.auth_password or getpass.getpass()
+	password = options.auth_password
+	if not password and keyring:
+		password = keyring.get_password(realm, username)
+	if not password:
+		password = getpass.getpass()
 	return username, password
 
 def configure_logging(level):
