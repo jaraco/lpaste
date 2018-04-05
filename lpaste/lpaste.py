@@ -15,6 +15,7 @@ from six.moves import http_client
 import pkg_resources
 import webbrowser
 import requests
+import contextlib2
 
 try:
 	import keyring
@@ -23,10 +24,8 @@ except ImportError:
 
 from .source import CodeSource, FileSource
 
-try:
+with contextlib2.suppress(ImportError):
 	from . import clipboard
-except ImportError:
-	pass
 
 version = pkg_resources.require('lpaste')[0].version
 session = requests.Session()

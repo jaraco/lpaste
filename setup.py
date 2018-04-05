@@ -38,6 +38,8 @@ params = dict(
 		'requests',
 		'keyring>=0.6',
 		'six>=1.4',
+		'jaraco.context',
+		'contextlib2',
 	],
 	extras_require={
 		'testing': [

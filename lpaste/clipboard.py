@@ -5,6 +5,7 @@ import struct
 import io
 
 import jaraco.clipboard
+import contextlib2
 
 from .source import FileSource, CodeSource
 
@@ -30,10 +31,8 @@ def get_image():
 def try_until_no_exception(*functions):
 	for f in functions:
 		exceptions = getattr(f, 'exceptions', ())
-		try:
+		with contextlib2.suppress(exceptions):
 			return f()
-		except exceptions:
-			pass
 	raise RuntimeError("No function succeeded")
 
 

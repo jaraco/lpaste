@@ -3,6 +3,9 @@ import abc
 import mimetypes
 import collections
 
+import jaraco.context
+
+
 # add mimetypes not present in Python
 mimetypes.add_type('image/svg+xml', '.svg')
 mimetypes.add_type('application/json', '.json')
@@ -26,13 +29,11 @@ class CodeSource(Source):
 	def apply(self, data):
 		data['code'] = self.code
 
+	@jaraco.context.suppress(Exception)
 	def check_python(self):
-		try:
-			# see if the code can compile as Python
-			compile(self.code, 'pasted_code.py', 'exec')
-			self.format = 'python'
-		except Exception:
-			pass  # use default format
+		# see if the code can compile as Python
+		compile(self.code, 'pasted_code.py', 'exec')
+		self.format = 'python'
 
 
 class FileSource(Source):
