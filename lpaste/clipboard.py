@@ -3,9 +3,9 @@ from __future__ import print_function, with_statement
 import sys
 import struct
 import io
+import contextlib
 
 import jaraco.clipboard
-import contextlib2
 
 from .source import FileSource, CodeSource
 
@@ -31,7 +31,7 @@ def get_image():
 def try_until_no_exception(*functions):
 	for f in functions:
 		exceptions = getattr(f, 'exceptions', ())
-		with contextlib2.suppress(exceptions):
+		with contextlib.suppress(exceptions):
 			return f()
 	raise RuntimeError("No function succeeded")
 

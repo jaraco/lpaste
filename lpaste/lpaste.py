@@ -9,13 +9,12 @@ import logging
 import pdb
 import socket
 import functools
-
-from six.moves import http_client
+import http.client
+import contextlib
 
 import pkg_resources
 import webbrowser
 import requests
-import contextlib2
 
 try:
 	import keyring
@@ -24,7 +23,7 @@ except ImportError:
 
 from .source import CodeSource, FileSource
 
-with contextlib2.suppress(ImportError):
+with contextlib.suppress(ImportError):
 	from . import clipboard
 
 version = pkg_resources.require('lpaste')[0].version
@@ -175,7 +174,7 @@ def configure_logging(level):
 	requests_log.propagate = True
 
 	# enable debugging at http.client level (requests->urllib3->http.client)
-	http_client.HTTPConnection.debuglevel = level <= logging.DEBUG
+	http.client.HTTPConnection.debuglevel = level <= logging.DEBUG
 
 
 def detect_auth(url, resolver):

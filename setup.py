@@ -33,13 +33,11 @@ params = dict(
 		name.split('.')[:-1] if nspkg_technique == 'managed'
 		else []
 	),
-	python_requires='>=2.7',
+	python_requires='>=3.5',
 	install_requires=[
 		'requests',
 		'keyring>=0.6',
-		'six>=1.4',
 		'jaraco.context',
-		'contextlib2',
 	],
 	extras_require={
 		'testing': [
@@ -69,7 +67,7 @@ params = dict(
 		"Development Status :: 5 - Production/Stable",
 		"Intended Audience :: Developers",
 		"License :: OSI Approved :: MIT License",
-		"Programming Language :: Python :: 2.7",
+		"Programming Language :: Python :: 3 :: only",
 		"Programming Language :: Python :: 3",
 	],
 	entry_points={
