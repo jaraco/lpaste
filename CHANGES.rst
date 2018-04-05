@@ -1,3 +1,8 @@
+3.5.0
+=====
+
+Project metadata refresh and maintenance release.
+
 3.4.2
 =====
 
