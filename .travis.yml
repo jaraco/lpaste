@@ -1,10 +1,10 @@
-dist: trusty
+dist: xenial
 sudo: false
 language: python
 
 python:
-- 3.5
-- &latest_py3 3.6
+- 3.6
+- &latest_py3 3.7
 
 jobs:
   fast_finish: true
@@ -24,11 +24,15 @@ jobs:
         secure: h07gd6xPThamwJM3u1tn1KIcNKaBeNvvNOVLBGv7ikeZDJjzGmDDJGcpY4RasLyCh4RDvhRInF98AOG0PHzepJpCX0pJOMI9BlenD4S6Q8OvfOEUaW2MWQAEiLFraSp1AidiZbI5iaIymCIyyJxwWmok2mvUe9v7AQEwLSqpWokoUZdxC/uZTZwXPHobTvhtkk6ZXAYnRlnHD/iyzN2GcmDscjJ9dPbcJwTMKIG9rRjYg78wlKEtGEjDKVS2FykoMI3kG+WEmuIo4N9FUfSSW7pn56Qx7Knf6u5Q6vqnIYaWtTJDNgVcQb3nqlZ7MJYfzt4yPnlxCmjY+syLzV6/hMNhkO10r2vJSPFbARmmq58TEaMzvAJxy6bEiwWiz8inXk3YKaIQyISrEvF0j+OIChfJhOZ8fNVgBWb/snvMShGRZw6I/Uv6aMYvEqMrTgxhqWA44OULhZOTOlIq5fDwGudtBOMYGGMzEFfHvWZVXMG/BXDYxUclwAgzMWiAfK2wF3V5a/Y/eRWqhUq7mpmwFra8VmaHBVetJmHk7gkDaeSD0PPj8OBnByb2rvWLScEHCS/eFP/Yw83BbxU6lH9nrTfcZp1y54BA6tKOGWHrGoekb0fEncik9IqfljLcfPhG4M4B5BlcTCVuwjRMQSztOCeFW76DJ3gZt+dKV2BSWlM=
       distributions: dists
       skip_cleanup: true
-      skip_upload_docs: true
 
 cache: pip
 
 install:
 - pip install tox tox-venv
 
+before_script:
+  # Disable IPv6. Ref travis-ci/travis-ci#8361
+  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
+      sudo sh -c 'echo 0 > /proc/sys/net/ipv6/conf/all/disable_ipv6';
+    fi
 script: tox
