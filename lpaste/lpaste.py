@@ -13,11 +13,7 @@ import contextlib
 import pkg_resources
 import webbrowser
 import requests
-
-try:
-	import keyring
-except ImportError:
-	keyring = None
+import keyring
 
 from .source import CodeSource, FileSource
 
