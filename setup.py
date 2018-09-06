@@ -32,6 +32,7 @@ params = dict(
 		'requests',
 		'keyring>=0.6',
 		'jaraco.context',
+		'jaraco.clipboard',
 	],
 	extras_require={
 		'testing': [
