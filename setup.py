@@ -43,7 +43,6 @@ params = dict(
 			'pytest-flake8',
 
 			# local
-			'pyobjc; sys_platform=="darwin"',
 		],
 		'docs': [
 			# upstream
