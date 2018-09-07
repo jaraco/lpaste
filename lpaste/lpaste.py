@@ -39,12 +39,7 @@ def _resolve_url():
 	that name resolves.
 	Override with 'LIBRARYPASTE_URL'
 	"""
-	try:
-		name, aliaslist, addresslist = socket.gethostbyname_ex('paste')
-	except socket.gaierror:
-		# jaraco generously hosts paste for the world
-		name = 'paste.jaraco.com'
-		name, aliaslist, addresslist = socket.gethostbyname_ex(name)
+	name, aliaslist, addresslist = socket.gethostbyname_ex('paste')
 	name = _patch_heroku(name, aliaslist)
 	fallback = 'https://{name}/'.format(name=name)
 	return os.environ.get('LIBRARYPASTE_URL', fallback)
