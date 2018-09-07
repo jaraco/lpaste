@@ -4,7 +4,6 @@ import re
 import getpass
 import argparse
 import logging
-import pdb
 import socket
 import functools
 import http.client
@@ -99,9 +98,6 @@ def get_options():
 		'--log-level', default=logging.WARNING,
 		type=log_level)
 	parser.add_argument(
-		'--debug', default=False, action='store_true',
-		help="Drop into a PDB prompt if the POST fails.")
-	parser.add_argument(
 		'file', nargs='?',
 		help="If file is not supplied, stdin will be used.")
 	parser.add_argument(
@@ -188,8 +184,6 @@ def main():
 	resolver = functools.partial(get_auth, options)
 	auth = detect_auth(paste_url, resolver)
 	resp = session.post(paste_url, data=data, files=files, auth=auth)
-	if not resp.ok and options.debug:
-		pdb.set_trace()
 	resp.raise_for_status()
 	url = resp.url
 	if 'clipboard' in globals():
