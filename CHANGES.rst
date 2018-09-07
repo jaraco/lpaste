@@ -1,3 +1,10 @@
+4.1
+===
+
+Package now declares all of its dependencies, avoiding optional
+functionality. Now, keyring and clipboard and image functionality
+are present by default.
+
 4.0
 ===
 
