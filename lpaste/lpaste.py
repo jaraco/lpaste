@@ -8,7 +8,6 @@ import pdb
 import socket
 import functools
 import http.client
-import contextlib
 
 import pkg_resources
 import webbrowser
@@ -16,9 +15,7 @@ import requests
 import keyring
 
 from .source import CodeSource, FileSource
-
-with contextlib.suppress(ImportError):
-	from . import clipboard
+from . import clipboard
 
 version = pkg_resources.require('lpaste')[0].version
 session = requests.Session()
@@ -115,10 +112,6 @@ def get_options():
 	if options.file and options.clipboard:
 		parser.error("Either supply a file or --clipboard, but not both")
 	if options.clipboard:
-		if 'clipboard' not in globals():
-			parser.error(
-				"Clipboard support not available - you must "
-				"supply a file")
 		source = clipboard.get_source()
 	else:
 		use_stdin = options.file in (None, '-')
