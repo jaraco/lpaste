@@ -201,7 +201,7 @@ def main():
 
 
 def get_realm(authenticate_header):
-	pattern = re.compile('\w+ realm="(?P<realm>.*)"')
+	pattern = re.compile(r'\w+ realm="(?P<realm>.*)"')
 	res = pattern.match(authenticate_header)
 	return res.groupdict()['realm']
 
