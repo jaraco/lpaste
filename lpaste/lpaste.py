@@ -34,15 +34,16 @@ def log_level(level_str):
 
 
 def _resolve_url():
+	return os.environ.get('LIBRARYPASTE_URL') or _default_url()
+
+
+def _default_url():
 	"""
-	if 'paste' resolves in this environment, use the hostname for which
-	that name resolves.
-	Override with 'LIBRARYPASTE_URL'
+	If 'paste' resolves, use the hostname to which it resolves.
 	"""
 	name, aliaslist, addresslist = socket.gethostbyname_ex('paste')
 	name = _patch_heroku(name, aliaslist)
-	fallback = 'https://{name}/'.format(name=name)
-	return os.environ.get('LIBRARYPASTE_URL', fallback)
+	return 'https://{name}/'.format(name=name)
 
 
 def _patch_heroku(name, aliases):
