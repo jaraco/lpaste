@@ -186,8 +186,7 @@ def main():
 	resp = session.post(paste_url, data=data, files=files, auth=auth)
 	resp.raise_for_status()
 	url = resp.url
-	if 'clipboard' in globals():
-		clipboard.set_text(url)
+	clipboard.set_text(url)
 	print('Paste URL:', url)
 	if options.browser:
 		print("Now opening browser...")
