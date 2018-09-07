@@ -26,10 +26,7 @@ log = logging.getLogger(__name__)
 
 py_version = re.sub(r'\s*\n\s*', '; ', sys.version, re.M)
 agent = 'lpaste ({version}) Python ({py_version})'.format(**locals())
-
-BASE_HEADERS = {
-	'User-Agent': agent,
-}
+session.headers['User-Agent'] = agent
 
 
 def log_level(level_str):
@@ -197,12 +194,10 @@ def main():
 	if not options.longurl:
 		data['makeshort'] = 'True'
 	files = options.source.apply(data)
-	headers = dict(BASE_HEADERS)
 
 	resolver = functools.partial(get_auth, options)
 	auth = detect_auth(paste_url, resolver)
-	resp = session.post(
-		paste_url, headers=headers, data=data, files=files, auth=auth)
+	resp = session.post(paste_url, data=data, files=files, auth=auth)
 	if not resp.ok and options.debug:
 		pdb.set_trace()
 	resp.raise_for_status()
