@@ -1,3 +1,8 @@
+v5.0.0
+======
+
+Require Python 3.6 or later. Removed clipboard extra.
+
 4.1
 ===
 
