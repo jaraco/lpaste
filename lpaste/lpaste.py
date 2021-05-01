@@ -8,7 +8,7 @@ import socket
 import functools
 import http.client
 
-import pkg_resources
+import importlib_metadata as md
 import webbrowser
 import requests
 import keyring
@@ -16,7 +16,7 @@ import keyring
 from .source import CodeSource, FileSource
 from . import clipboard
 
-version = pkg_resources.require('lpaste')[0].version
+version = md.version('lpaste')
 session = requests.Session()
 log = logging.getLogger(__name__)
 

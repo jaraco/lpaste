@@ -1,3 +1,8 @@
+v5.1.0
+======
+
+Rely on importlib_metadata for package metadata.
+
 v5.0.1
 ======
 
