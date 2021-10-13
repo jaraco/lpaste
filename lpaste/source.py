@@ -21,6 +21,18 @@ class Source:
 
 
 class CodeSource(Source):
+    r"""
+    >>> cs = CodeSource('Once upon a time.')
+    >>> cs.check_python()
+    >>> hasattr(cs, 'format')
+    False
+    >>> cs = CodeSource('a = 3\nfoo')
+    >>> cs.check_python()
+    >>> cs.format
+    'python'
+    >>> cs.apply({})
+    """
+
     def __init__(self, code):
         self.code = code
 
