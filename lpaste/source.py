@@ -47,6 +47,18 @@ class CodeSource(Source):
 
 
 class FileSource(Source):
+    """
+    >>> fs = FileSource.from_snippet('<a href="https://jaraco.com">go</a>')
+    >>> fs.apply({})
+    {'file': ...}
+    >>> fs = FileSource(io.StringIO('abc'))
+    >>> file = fs.apply({})
+    >>> fs = FileSource(io.StringIO('abc'), filename='abc.txt')
+    >>> file = fs.apply({})
+    >>> file['file'].content_type
+    'text/plain'
+    """
+
     def __init__(self, stream, content_type=None, filename=None):
         self.stream = stream
         self.content_type = content_type
