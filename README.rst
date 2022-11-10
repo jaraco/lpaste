@@ -1,10 +1,7 @@
 .. image:: https://img.shields.io/pypi/v/lpaste.svg
-   :target: `PyPI link`_
+   :target: https://pypi.org/project/lpaste
 
 .. image:: https://img.shields.io/pypi/pyversions/lpaste.svg
-   :target: `PyPI link`_
-
-.. _PyPI link: https://pypi.org/project/lpaste
 
 .. image:: https://github.com/jaraco/lpaste/workflows/tests/badge.svg
    :target: https://github.com/jaraco/lpaste/actions?query=workflow%3A%22tests%22
