@@ -1,3 +1,10 @@
+v5.2.0
+======
+
+Re-release after many packaging updates.
+
+Requires Python 3.7 or later.
+
 v5.1.0
 ======
 
