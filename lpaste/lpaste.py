@@ -194,7 +194,6 @@ def detect_auth(url, resolver):
 
 
 def main():
-
     options = get_options()
     configure_logging(options.log_level)
 
