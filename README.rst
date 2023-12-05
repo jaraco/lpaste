@@ -3,7 +3,7 @@
 
 .. image:: https://img.shields.io/pypi/pyversions/lpaste.svg
 
-.. image:: https://github.com/jaraco/lpaste/workflows/tests/badge.svg
+.. image:: https://github.com/jaraco/lpaste/actions/workflows/main.yml/badge.svg
    :target: https://github.com/jaraco/lpaste/actions?query=workflow%3A%22tests%22
    :alt: tests
 
