@@ -72,6 +72,8 @@ type = [
 
 	# local
 	"types-requests",
+	# Note: Pillow 10.3 provides its own types
+	"types-Pillow",
 ]
 
 
@@ -80,7 +82,3 @@ lpaste = "lpaste.lpaste:main"
 
 
 [tool.setuptools_scm]
-
-
-[tool.pytest-enabler.mypy]
-# Disabled due to jaraco/skeleton#143
