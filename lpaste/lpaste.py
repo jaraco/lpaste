@@ -106,7 +106,7 @@ def get_options():
         dest='browser',
         action="store_true",
         default=False,
-        help="Open your paste in a new browser window after it's " "uploaded",
+        help="Open your paste in a new browser window after it's uploaded",
     )
     parser.add_argument(
         '-c',
