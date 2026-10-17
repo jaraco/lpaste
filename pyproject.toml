@@ -43,8 +43,8 @@ test = [
 	"pytest >= 6, != 8.1.*",
 
 	# local
-	# pinned for #4
-	"pytest >= 8.2dev",
+	# for #4
+	"pytest >= 8.2",
 ]
 
 doc = [
