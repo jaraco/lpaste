@@ -1,17 +1,23 @@
-import io
 import abc
+import io
 import mimetypes
-import collections
+from typing import IO, NamedTuple
 
 import jaraco.context
-
 
 # add mimetypes not present in Python
 mimetypes.add_type('image/svg+xml', '.svg')
 mimetypes.add_type('application/json', '.json')
 
-# a "file" in requests is a tuple of name, stream, content_type
-RequestsFile = collections.namedtuple('RequestsFile', 'filename stream content_type')
+
+class RequestsFile(NamedTuple):
+    """
+    A "file" in requests is a tuple of name, stream, content_type
+    """
+
+    filename: str | None
+    stream: IO
+    content_type: str | None
 
 
 class Source:

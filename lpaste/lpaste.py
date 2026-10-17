@@ -1,20 +1,20 @@
-import os
-import sys
-import re
-import getpass
 import argparse
-import logging
-import socket
 import functools
+import getpass
 import http.client
+import logging
+import os
+import re
+import socket
+import sys
+import webbrowser
 
 import importlib_metadata as md
-import webbrowser
-import requests
 import keyring
+import requests
 
-from .source import CodeSource, FileSource
 from . import clipboard
+from .source import CodeSource, FileSource
 
 version = md.version('lpaste')
 session = requests.Session()
@@ -37,9 +37,9 @@ def _default_url():
     """
     If 'paste' resolves, use the hostname to which it resolves.
     """
-    name, aliaslist, addresslist = socket.gethostbyname_ex('paste')
+    name, aliaslist, _addresslist = socket.gethostbyname_ex('paste')
     name = _patch_heroku(name, aliaslist)
-    return 'https://{name}/'.format(name=name)
+    return f'https://{name}/'
 
 
 def _patch_heroku(name, aliases):
@@ -66,7 +66,7 @@ def get_options():
         '--site',
         dest='site',
         default=default_url,
-        help="URL for the library paste site to use. By default: %s" % default_url,
+        help=f"URL for the library paste site to use. By default: {default_url}",
     )
     parser.add_argument(
         '-t',
@@ -135,7 +135,7 @@ def get_options():
         source = clipboard.get_source()
     else:
         use_stdin = options.file in (None, '-')
-        stream = open(options.file, 'rb') if not use_stdin else sys.stdin
+        stream = open(options.file, 'rb') if not use_stdin else sys.stdin  # noqa: SIM115 consumed after this block
         filename = os.path.basename(options.file) if not use_stdin else None
         if options.attach:
             source = FileSource(stream, filename=filename)

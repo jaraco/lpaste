@@ -1,11 +1,11 @@
-import sys
-import struct
-import io
 import contextlib
+import io
+import struct
+import sys
 
 import jaraco.clipboard
 
-from .source import FileSource, CodeSource
+from .source import CodeSource, FileSource
 
 
 def get_image():
