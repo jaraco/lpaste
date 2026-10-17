@@ -20,7 +20,7 @@ version = md.version('lpaste')
 session = requests.Session()
 log = logging.getLogger(__name__)
 
-py_version = re.sub(r'\s*\n\s*', '; ', sys.version, re.M)
+py_version = re.sub(r'\s*\n\s*', '; ', sys.version)
 agent = 'lpaste ({version}) Python ({py_version})'.format(**locals())
 session.headers['User-Agent'] = agent
 
